@@ -164,17 +164,18 @@
         cell1.backgroundColor =BassColor(255, 255, 255);
         cell1.selectionStyle = UITableViewCellSelectionStyleNone;
         if (indexPath.section==1) {
-            if (indexPath.row==0) {
+            if (indexPath.row == 0) {
                 cell1.leftLable.text = @"账号等级";
-                if ([self.dataDic[@"level"] intValue]==0) {
+                if ([self.dataDic[@"level"] intValue] == 0) {
                    cell1.rightLable.text = @"";
-                }else{
+                }else if (self.dataDic[@"levelname"] != nil) {
                    cell1.rightLable.text = [NSString stringWithFormat:@"%@",self.dataDic[@"levelname"]];
                 }
-                
-            }else{
+            }else {
                 cell1.leftLable.text = @"我的ID";
-                cell1.rightLable.text = [NSString stringWithFormat:@"%@",self.dataDic[@"id"]];
+                if (self.dataDic[@"id"] != nil) {
+                    cell1.rightLable.text = [NSString stringWithFormat:@"%@",self.dataDic[@"id"]];
+                }
             }
         }else{
             cell1.leftLable.text = @"实名认证";

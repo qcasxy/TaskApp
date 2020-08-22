@@ -22,7 +22,7 @@
 }
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.leftLable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFangSC-Regular", height(14)) textAlignmen:NSTextAlignmentLeft text:@"账号等级"];
+        self.leftLable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFangSC-Regular", height(14)) textAlignmen:NSTextAlignmentLeft text:@""];
         [self addSubview:self.leftLable];
         [self.leftLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(width(15));
@@ -30,7 +30,7 @@
             make.width.mas_equalTo(width(120));
             make.height.mas_equalTo(height(16));
         }];
-        self.rightLable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFangSC-Regular", height(14)) textAlignmen:NSTextAlignmentLeft text:@"账号等级"];
+        self.rightLable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFangSC-Regular", height(14)) textAlignmen:NSTextAlignmentLeft text:@""];
         [self addSubview:self.rightLable];
         [self.rightLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.leftLable.mas_right).offset(width(10));

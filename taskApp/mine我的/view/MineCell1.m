@@ -47,25 +47,30 @@
         self.touImg.image =[UIImage imageNamed:@""];
         [self addSubview:self.touImg];
         [self.touImg mas_makeConstraints:^(MASConstraintMaker *make) {
-           make.left.mas_equalTo(self).offset(width(19));
+            make.left.mas_equalTo(self).offset(width(19));
             make.top.mas_equalTo(self.titleLable.mas_bottom).offset(height(27));
             make.width.height.mas_equalTo(height(60));
         }];
         self.touImg.layer.masksToBounds =YES;
         self.touImg.layer.cornerRadius = height(30);
         
-        
-        
-        self.nameLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(16)) textAlignmen:NSTextAlignmentLeft text:@"普罗米修斯"];
+        self.nameLable = [HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(16)) textAlignmen:NSTextAlignmentLeft text:@""];
+        self.nameLable.numberOfLines = 0;
         [self addSubview:self.nameLable];
+        [self.nameLable mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.touImg.mas_right).offset(width(10));
+            make.centerY.mas_equalTo(self.touImg.mas_centerY).offset(height(-15));
+            make.height.mas_equalTo(height(20));
+        }];
        
-        self.IDLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(13)) textAlignmen:NSTextAlignmentLeft text:@"ID：124553"];
+        self.IDLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(13)) textAlignmen:NSTextAlignmentLeft text:@"ID："];
         [self addSubview:self.IDLable];
         [self.IDLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.touImg.mas_right).offset(width(10));
-            make.centerY.mas_equalTo(self.touImg.mas_centerY).offset(height(15));
+            make.top.mas_greaterThanOrEqualTo(self.nameLable.mas_bottom).offset(height(5.0));
+            make.centerY.greaterThanOrEqualTo(self.touImg.mas_centerY).offset(height(15));
             make.height.mas_equalTo(height(20));
-            make.width.mas_equalTo(width(200));
+            make.right.mas_lessThanOrEqualTo(self).offset(width(-40));
         }];
         
         self.leveImg =[[UIImageView alloc]init];
@@ -76,16 +81,14 @@
             make.height.mas_equalTo(height(13));
             make.width.mas_equalTo(width(63));
             make.left.mas_equalTo(self.nameLable.mas_right).offset(width(5));
+            make.right.mas_lessThanOrEqualTo(self).offset(width(-40));
         }];
         
         self.leveLable=[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(13)) textAlignmen:NSTextAlignmentCenter text:@""];
         self.leveLable.adjustsFontSizeToFitWidth = YES;
         [self addSubview:self.leveLable];
         [self.leveLable mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.nameLable.mas_centerY);
-            make.height.mas_equalTo(height(13));
-            make.width.mas_equalTo(width(63));
-            make.left.mas_equalTo(self.nameLable.mas_right).offset(width(5));
+            make.edges.mas_equalTo(self.leveImg);
         }];
         
         self.rightImg=[[UIImageView alloc]init];
@@ -106,7 +109,7 @@
             make.top.mas_equalTo(self.touImg.mas_bottom).offset(height(10));
             make.width.mas_equalTo(width(100));
         }];
-        self.moneyLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"DIN-Medium", height(28)) textAlignmen:NSTextAlignmentLeft text:@"收入289.7"];
+        self.moneyLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"DIN-Medium", height(28)) textAlignmen:NSTextAlignmentLeft text:@""];
         self.moneyLable.font = [UIFont systemFontOfSize:16];
         [self addSubview:self.moneyLable];
         [self.moneyLable mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -115,7 +118,7 @@
             make.height.mas_equalTo(height(28));
             make.width.mas_equalTo(kScreenWidth/2-width(44));
         }];
-        self.moneyLable1 =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"DIN-Medium", height(28)) textAlignmen:NSTextAlignmentRight text:@"提现289.7"];
+        self.moneyLable1 =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"DIN-Medium", height(28)) textAlignmen:NSTextAlignmentRight text:@""];
       self.moneyLable1.font = [UIFont systemFontOfSize:16];
         [self addSubview:self.moneyLable1];
         [self.moneyLable1 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -216,22 +219,21 @@
     }
     
     self.nameLable.text = model.nickname;
-    CGFloat nameWidth =[HttpTool floatWithStr:model.nickname and:16];
-    [self.nameLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.touImg.mas_right).offset(width(10));
-        make.centerY.mas_equalTo(self.touImg.mas_centerY).offset(-height(15));
-        make.height.mas_equalTo(height(20));
-        make.width.mas_equalTo(width(40)+nameWidth);
-    }];
-   
     
-    self.IDLable.text = [NSString stringWithFormat:@"ID:%@",model.mineID];
-    NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"收入 %@",model.brokerage]];
-    [attriStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 2)];
-    self.moneyLable.attributedText = attriStr;
+    if (model.mineID != nil) {
+        self.IDLable.text = [NSString stringWithFormat:@"ID:%@",model.mineID];
+    }
     
-    NSMutableAttributedString *attriStr1 = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"提现 %@",model.price]];
-    [attriStr1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 2)];
-    self.moneyLable1.attributedText = attriStr1;
+    if (model.brokerage != nil) {
+        NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"收入 %@",model.brokerage]];
+        [attriStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 2)];
+        self.moneyLable.attributedText = attriStr;
+    }
+    
+    if (model.price != nil) {
+        NSMutableAttributedString *attriStr1 = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"提现 %@",model.price]];
+        [attriStr1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 2)];
+        self.moneyLable1.attributedText = attriStr1;
+    }
 }
 @end
