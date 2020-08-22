@@ -25,15 +25,14 @@
     self.view.backgroundColor =BassColor(241, 241, 241);
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(goToBack)];
     // 正文
-      UIWebView *webView = [[UIWebView alloc] init];
-        webView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
-
+    UIWebView *webView = [[UIWebView alloc] init];
+    webView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
+    
     
     webView.delegate = self;
     webView.scrollView.scrollEnabled = YES;
     [self.view addSubview:webView];
     _webView = webView;
-  
     
     if (@available(iOS 11.0, *)) {
         

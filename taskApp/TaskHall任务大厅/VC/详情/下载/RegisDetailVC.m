@@ -45,7 +45,7 @@
         make.centerX.mas_equalTo(self.view.mas_centerX);
         make.height.mas_equalTo(height(40));
         make.width.mas_equalTo(width(345));
-        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-height(80));
+        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-height(34.0) - kSafeAreaBottomHeight);
     }];
     [[sureBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
        
@@ -93,11 +93,12 @@
 }
 -(UITableView*)tableView{
     if (!_tableView) {
-        _tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight) style:UITableViewStyleGrouped];
+        _tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight - NavHeight) style:UITableViewStyleGrouped];
         _tableView.backgroundColor =[UIColor whiteColor];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.delegate =self;
         _tableView.dataSource =self;
+        _tableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectMake(0.0, 0.0, kScreenWidth, height(108))];
         [_tableView registerClass:[TaskDetailCell0 class] forCellReuseIdentifier:@"TaskDetailCell0"];
         [_tableView registerClass:[TaskDetailCell2 class] forCellReuseIdentifier:@"TaskDetailCell2"];
     }

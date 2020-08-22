@@ -67,30 +67,33 @@
         
     }];
 }
--(void)load_home_index{
-    [self.coverUrlArr removeAllObjects];
-     [self.coverArr removeAllObjects];
-    [self.lableArr removeAllObjects];
+
+-(void)load_home_index {
     [HttpTool get:API_POST_Home_index dic:@{@"client":@"2"} success:^(id  _Nonnull responce) {
-        self.homenCollection.ly_emptyView =[MyDIYEmpty diyNoDataEmpty];
+        self.homenCollection.ly_emptyView = [MyDIYEmpty diyNoDataEmpty];
         [self.homenCollection.mj_header endRefreshing];
         if ([responce[@"code"] intValue]==200) {
+            [self.coverUrlArr removeAllObjects];
+            [self.coverArr removeAllObjects];
+            [self.lableArr removeAllObjects];
+            
             [responce[@"data"][@"banner"] enumerateObjectsUsingBlock:^(NSDictionary* obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 [self.coverArr addObject:obj[@"cover"]];
-                 [self.coverUrlArr addObject:obj[@"url"]];
+                [self.coverUrlArr addObject:obj[@"url"]];
             }];
-            self.listArr =[ListModel mj_objectArrayWithKeyValuesArray:responce[@"data"][@"list"]];
+            self.listArr = [ListModel mj_objectArrayWithKeyValuesArray:responce[@"data"][@"list"]];
             [responce[@"data"][@"list"] enumerateObjectsUsingBlock:^(NSDictionary * dic, NSUInteger idx, BOOL * _Nonnull stop) {
                 [self.lableArr addObject:[LableModel mj_objectArrayWithKeyValuesArray:dic[@"label"]]];
             }];
-            
-            
+            [self.homenCollection reloadData];
+        }else {
+            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
-        [self.homenCollection reloadData];
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"网络错误\n请稍后下拉刷新页面" duration:0.8];
     }];
 }
+
 -(UICollectionView*)homenCollection{
     if (!_homenCollection) {
          UICollectionViewFlowLayout * flow =[[UICollectionViewFlowLayout alloc]init];
@@ -138,12 +141,10 @@
     else{
         HomeCell4 * cell4=[collectionView dequeueReusableCellWithReuseIdentifier:@"HomeCell4" forIndexPath:indexPath];
         
-        cell4.backgroundColor =BassColor(255,255,255);
-        if (self.listArr.count==0) {
-            
-        }else{
+        cell4.backgroundColor = BassColor(255,255,255);
+        if (indexPath.row < self.lableArr.count) {
             ListModel * model =self.listArr[indexPath.row];
-            cell4.numLable.text =[NSString stringWithFormat:@"%ld",indexPath.row+1];
+            cell4.numLable.text =[NSString stringWithFormat:@"%ld",indexPath.row + 1];
             [cell4 chuanZhiListModel:model modelArr:self.lableArr[indexPath.row]];
         }
         
@@ -223,47 +224,49 @@
         VC.mmodel=self.cellModel;
         [self.navigationController pushViewController:VC animated:YES];
     }else if (self.listArr.count > indexPath.row) {
+        [self showDGActView];
         ListModel * model = self.listArr[indexPath.row];
         [HttpTool get:API_POST_taskInfo dic:@{@"id":model.listID} success:^(id  _Nonnull responce) {
+            [self stopDGActView];
             if ([responce[@"code"] intValue]==200) {
                 if ([responce[@"data"][@"cateid"] intValue]==1) {
-                    
                     RegisDetailVC * VC =[[RegisDetailVC alloc]init];
                     VC.hidesBottomBarWhenPushed=YES;
-                    VC.dataDic =responce[@"data"];
-                    VC.homeIndex=102;
+                    VC.dataDic = responce[@"data"];
+                    VC.homeIndex = 102;
                     [self.navigationController pushViewController:VC animated:YES];
-                    
-                }else{
+                }else {
                     OrdinaryVC * VC =[[OrdinaryVC alloc]init];
                     VC.hidesBottomBarWhenPushed=YES;
                     VC.homeIndex=102;
                     VC.dataDic =responce[@"data"];
                     [self.navigationController pushViewController:VC animated:YES];
                 }
+            }else {
+                [self showToastInView:self.view message: @"暂时无法查看" duration:0.8];
             }
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self stopDGActView];
+            [self showToastInView:self.view message: @"网络错误，暂时无法查看" duration:0.8];
         }];
     }
 }
--(void)clickBtn{
+
+-(void)clickBtn {
     
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
--(void)goToWeb:(NSInteger)index{
-    HomeWebViC * webVC =[[HomeWebViC alloc]init];
-   // webVC.name = @"用户协议";
-    webVC.urlStr = self.coverUrlArr[index];
-    webVC.hidesBottomBarWhenPushed =YES;
-    [self.navigationController pushViewController:webVC animated:YES];
+-(void)goToWeb:(NSInteger)index {
+    if (index < self.coverUrlArr.count) {
+        NSString* urlStr = self.coverUrlArr[index];
+        if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString: urlStr]]) {
+            HomeWebViC * webVC =[[HomeWebViC alloc]init];
+            webVC.urlStr = urlStr;
+            webVC.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:webVC animated:YES];
+            return;
+        }
+    }
+    [self showToastInView:self.view message: @"无法打开该页面" duration: 0.8];
 }
 @end

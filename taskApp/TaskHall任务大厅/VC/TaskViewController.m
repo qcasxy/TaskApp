@@ -195,27 +195,30 @@
     return 1;
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    [self showDGActView];
     ListModel * model =self.listArr[indexPath.row];
     [HttpTool get:API_POST_taskInfo dic:@{@"id":model.listID} success:^(id  _Nonnull responce) {
-        if ([responce[@"code"] intValue]==200) {
+        [self stopDGActView];
+        if ([responce[@"code"] intValue] == 200) {
             if ([responce[@"data"][@"cateid"] intValue]==1) {
-                
                 RegisDetailVC * VC =[[RegisDetailVC alloc]init];
                 VC.hidesBottomBarWhenPushed=YES;
                 VC.homeIndex=101;
                 VC.dataDic =responce[@"data"];
                 [self.navigationController pushViewController:VC animated:YES];
-                
-            }else{
+            }else {
                 OrdinaryVC * VC =[[OrdinaryVC alloc]init];
                 VC.hidesBottomBarWhenPushed=YES;
                 VC.dataDic =responce[@"data"];
                 VC.homeIndex=101;
                 [self.navigationController pushViewController:VC animated:YES];
             }
+        }else {
+            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self stopDGActView];
+        [self showToastInView:self.view message: @"网络错误" duration:0.8];
     }];
 }
 -(void)chuanZhiType:(int)indexType{

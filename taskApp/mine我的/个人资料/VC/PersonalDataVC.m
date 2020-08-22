@@ -10,6 +10,8 @@
 #import "PersinDataCell1.h"
 #import "PersinDataCell0.h"
 #import "RealNameVC.h"
+#import "UIView+Toast.h"
+
 @interface PersonalDataVC ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITableViewDelegate,UITableViewDataSource,PersinDataCell0Delegate>
 @property(nonatomic,strong)UITableView * tableView;
 @property(nonatomic,strong)NSDictionary * dataDic;
@@ -23,6 +25,7 @@
 -(void)clickBtn{
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor =BassColor(241, 241, 241);
@@ -95,21 +98,32 @@
         [self showToastInView:self.view message:@"网络错误" duration:0.8];
     }];
 }
+
 -(void)load_userIndex{
+    [self showDGActView];
     [HttpTool get:API_POST_userIndex dic:@{} success:^(id  _Nonnull responce) {
+        [self stopDGActView];
         if ([responce[@"code"] intValue]==200) {
             self.dataDic = responce[@"data"];
             NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:responce[@"data"][@"headimg"]]];
             self.img=[UIImage imageWithData:data];
-        }else{
-            
+            [self.tableView reloadData];
+        }else {
+            [self.view hideAllToasts];
+            [self.view makeToast: responce[@"message"] duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+                [self.navigationController popViewControllerAnimated:true];
+            }];
         }
-        [self.tableView reloadData];
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self stopDGActView];
+        [self.view hideAllToasts];
+        [self.view makeToast: @"网络错误" duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+            [self.navigationController popViewControllerAnimated:true];
+        }];
     }];
 }
--(UITableView*)tableView{
+
+-(UITableView*)tableView {
     if (!_tableView) {
         _tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, height(435)) style:UITableViewStyleGrouped];
         _tableView.backgroundColor =BassColor(241, 241, 241);
