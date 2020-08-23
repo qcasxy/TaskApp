@@ -12,24 +12,28 @@
 #import "LoginViewController.h"
 #import "SDImageCache.h"
 #import "AboutUsVC.h"
+#import "PasswordViewController.h"
+
 @interface SetVC ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)UITableView * tableView;
 @property(nonatomic,strong)NSMutableArray * dataArr;
 @end
 
 @implementation SetVC
--(void)clickBtn{
+-(void)clickBtn {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor =BassColor(241, 241, 241);
     [self setNavTitle:@"设置"];
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(clickBtn)];
     [self.view addSubview:self.tableView];
-     self.dataArr=[MineModel mj_objectArrayWithKeyValuesArray:@[@{@"name":@"清除缓存",@"img":@"lishi"},@{@"name":@"检查更新",@"img":@"gongzuo"},@{@"name":@"关于我们",@"img":@"bangzhu"}]];
+     self.dataArr=[MineModel mj_objectArrayWithKeyValuesArray:@[@{@"name":@"设置密码",@"img":@"lishi"},@{@"name":@"清除缓存",@"img":@"lishi"},@{@"name":@"检查更新",@"img":@"gongzuo"},@{@"name":@"关于我们",@"img":@"bangzhu"}]];
     // Do any additional setup after loading the view.
 }
+
 -(UITableView*)tableView{
     if (!_tableView) {
         _tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight) style:UITableViewStyleGrouped];
@@ -39,51 +43,9 @@
         _tableView.delegate =self;
         _tableView.dataSource =self;
         [_tableView registerClass:[SetCell class] forCellReuseIdentifier:@"SetCell"];
-    }
-    return _tableView;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-        return 1;
-
-    
-}
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 3;
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-       SetCell * cell =[tableView dequeueReusableCellWithIdentifier:@"SetCell"];
-        cell.backgroundColor=UIColor.whiteColor;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    MineModel * model =self.dataArr[indexPath.section];
-    [cell chuanZhiMineModel:model];
-        return cell;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-   
-    return 45;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-   
-    return 0.5;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    if (section==2) {
-      return 100;
-    }
-    return 0.0001;
-}
-- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView * heardView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 0.5)];
-    heardView.backgroundColor = BassColor(241, 241, 241);
-    return heardView;
-}
-- (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView * footView =[[UIView alloc]init];
-    if (section==2) {
-        footView.frame= CGRectMake(0, 0, kScreenWidth, 100);
-        UIButton * tiBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+        
+        UIView *footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 100)];
+        UIButton *tiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         tiBtn.backgroundColor = BassColor(17, 151, 255);
         [tiBtn setTitle:@"退出登录" forState:0];
         tiBtn.titleLabel.font = VPFont(@"PingFang-SC-Medium", height(17));
@@ -107,17 +69,62 @@
             UIWindow * window = [UIApplication sharedApplication].delegate.window;
             window.rootViewController =loginNav;
         }];
-    }else{
-       footView.frame= CGRectMake(0, 0, kScreenWidth, 0.0001);
+        
+        _tableView.tableFooterView = footView;
     }
+    return _tableView;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 1;
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return self.dataArr.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    SetCell * cell =[tableView dequeueReusableCellWithIdentifier:@"SetCell"];
+    cell.backgroundColor=UIColor.whiteColor;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    MineModel * model =self.dataArr[indexPath.section];
+    [cell chuanZhiMineModel:model];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 45;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 0.5;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0.0001;
+}
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    UIView * heardView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 0.5)];
+    heardView.backgroundColor = BassColor(241, 241, 241);
+    return heardView;
+}
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    UIView * footView =[[UIView alloc]init];
+    footView.frame= CGRectMake(0, 0, kScreenWidth, 0.0001);
     footView.backgroundColor = BassColor(241, 241, 241);
    
     return footView;
 }
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSUInteger intg =[[SDImageCache sharedImageCache] totalDiskSize];
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==0) {
-       
+        PasswordViewController * VC = [[PasswordViewController alloc] initWithType: NO];
+        VC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:VC animated:YES];
+    }else if (indexPath.section==1) {
+        NSUInteger intg =[[SDImageCache sharedImageCache] totalDiskSize];
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:[NSString stringWithFormat:@"%@内存",[self fileSizeWithInterge:intg]] preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"确定", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
@@ -125,7 +132,7 @@
         [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
         
         [self presentViewController:alertController animated:YES completion:nil];
-    }else if (indexPath.section==1){
+    }else if (indexPath.section==2){
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         [HttpTool get:API_POST_checkBb dic:@{@"type":@"2",@"bbnum":[NSString stringWithFormat:@"%@",  [infoDictionary objectForKey:@"CFBundleShortVersionString"]]} success:^(id  _Nonnull responce) {
             if ([responce[@"code"] intValue]==200) {
@@ -148,8 +155,8 @@
         VC.hidesBottomBarWhenPushed=YES;
         [self.navigationController pushViewController:VC animated:YES];
     }
-   
 }
+
 //计算出大小
 - (NSString *)fileSizeWithInterge:(NSInteger)size{
     // 1k = 1024, 1m = 1024k
@@ -166,14 +173,5 @@
         return [NSString stringWithFormat:@"%.1fG",aFloat];
     }
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

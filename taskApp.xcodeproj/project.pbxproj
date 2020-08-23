@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F8DBC4624F2C43B002887D9 /* PasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8DBC4524F2C43B002887D9 /* PasswordViewController.m */; };
 		8900DC132374217B008A8EDC /* HttpTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC102374217A008A8EDC /* HttpTool.m */; };
 		8900DC1B237421D3008A8EDC /* BassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC15237421D2008A8EDC /* BassTableViewController.m */; };
 		8900DC1C237421D3008A8EDC /* BassBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC17237421D2008A8EDC /* BassBarViewController.m */; };
@@ -199,6 +200,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F8DBC4424F2C43B002887D9 /* PasswordViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PasswordViewController.h; sourceTree = "<group>"; };
+		2F8DBC4524F2C43B002887D9 /* PasswordViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PasswordViewController.m; sourceTree = "<group>"; };
 		4B73B38EE4516009B15A9197 /* Pods-taskApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taskApp.release.xcconfig"; path = "Target Support Files/Pods-taskApp/Pods-taskApp.release.xcconfig"; sourceTree = "<group>"; };
 		744D17FDA7873656905D9677 /* Pods_taskApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_taskApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8900DC0E23742179008A8EDC /* HeaderSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderSet.h; sourceTree = "<group>"; };
@@ -1579,6 +1582,8 @@
 				8E8C74582374664C0074AE24 /* LoginViewController.m */,
 				89F2C098237562650035F9D2 /* BindPhoneVC.h */,
 				89F2C099237562650035F9D2 /* BindPhoneVC.m */,
+				2F8DBC4424F2C43B002887D9 /* PasswordViewController.h */,
+				2F8DBC4524F2C43B002887D9 /* PasswordViewController.m */,
 			);
 			path = "login注册";
 			sourceTree = "<group>";
@@ -1910,6 +1915,7 @@
 				8943FFD2237D568B008E05F1 /* SuccessViewController.m in Sources */,
 				89E55116237B8C3800EEB2F9 /* VipCell.m in Sources */,
 				893FF2D423C025F2006B303F /* XinVipVC.m in Sources */,
+				2F8DBC4624F2C43B002887D9 /* PasswordViewController.m in Sources */,
 				8900DC8923742202008A8EDC /* DGActivityIndicatorBallClipRotateAnimation.m in Sources */,
 				89C1B61D237967E4006B1150 /* HNPopMenuTableViewCell.m in Sources */,
 				893EDE6D23757F4900534731 /* HuiYuanVC.m in Sources */,

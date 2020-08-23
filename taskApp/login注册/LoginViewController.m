@@ -14,76 +14,161 @@
 #import <UMShare/UMShare.h>
 #import "BindPhoneVC.h"
 #import "WebXieViewController.h"
+#import "VerifyButtonUtils.h"
+#import "PasswordViewController.h"
+
 @interface LoginViewController ()
-@property(nonatomic,strong)UIButton * sureBtn;
+
+@property (nonatomic, strong) UITextField *phoneField;
+@property (nonatomic, strong) UITextField *codeField;
+@property (nonatomic, strong) UITextField *inviteField;
+@property (nonatomic, strong) VerifyButtonUtils *verifyBtn;
+@property (nonatomic, strong) UIButton *leftButton;
+@property (nonatomic, strong) UIButton *rightButton;
+
+@property (nonatomic, assign) BOOL isPassword;
+
+@property(nonatomic,strong)UIButton * wechatLoginBtn;
 @property(nonatomic,strong)UMSocialUserInfoResponse *resp;
+
 @end
 
 @implementation LoginViewController
--(void)viewWillAppear:(BOOL)animated{
+
+-(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [self isHidden];
     if (self.msg.length>0) {
         [self showToastInView:self.view message:self.msg duration:0.8];
     }
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    CGFloat imageWidth = 30;
-    CGFloat imageHeight = 30;
-    CGFloat spacing = 10;
     self.view.backgroundColor = UIColor.whiteColor;
-    UIImageView * backImg =[[UIImageView alloc]init];
+    
+    UIImageView * backImg =[[UIImageView alloc] init];
     backImg.image =[UIImage imageNamed:@"logoBack"];
     [self.view addSubview:backImg];
     [backImg mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.top.bottom.mas_equalTo(self.view);
+        make.edges.mas_equalTo(self.view);
     }];
-    UIImageView * logoImg =[[UIImageView alloc]init];
+    
+    UIImageView * logoImg =[[UIImageView alloc] init];
     logoImg.image =[UIImage imageNamed:@"logo"];
     [self.view addSubview:logoImg];
     [logoImg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.top.mas_equalTo(self.view).offset(height(80)+NavHeight);
-        make.width.mas_equalTo(150);
+        make.top.mas_equalTo(self.view).offset(height(40.0) + NavHeight);
         make.height.mas_equalTo(150);
+        make.width.mas_equalTo(logoImg.mas_height).multipliedBy(340.0 / 313.0);
     }];
-    self.sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.sureBtn setTitle:@"微信授权登录" forState:0];
-    self.sureBtn.backgroundColor =BassColor(17, 151, 255);
-    [self.sureBtn setTitleColor:BassColor(255, 255,255) forState:0];
-    [self.sureBtn setImage:[UIImage imageNamed:@"wechatbai"] forState:0];
-    [self.view addSubview:self.sureBtn];
-    [self.sureBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.height.mas_equalTo(height(50));
-        make.width.mas_equalTo(width(305));
-        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-height(100));
+    
+    self.phoneField = [HttpTool createField:@"请输入手机号" font:[UIFont systemFontOfSize:height(15)] color:BassColor(233, 233, 233) ishidden:NO];
+    self.phoneField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
+    self.phoneField.layer.borderWidth = 1.0;
+    self.phoneField.layer.cornerRadius = 4.0;
+    self.phoneField.keyboardType = UIKeyboardTypePhonePad;
+    self.phoneField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
+    self.phoneField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, width(10.0), height(44.0))];
+    self.phoneField.leftViewMode = UITextFieldViewModeAlways;
+    [self.view addSubview:self.phoneField];
+    [self.phoneField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.view).inset(width(34.0));
+        make.height.mas_equalTo(height(34.0));
+        make.top.mas_equalTo(logoImg.mas_bottom).offset(height(40));
     }];
-    self.sureBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -spacing/2, 0, spacing/2);
-    self.sureBtn.titleEdgeInsets = UIEdgeInsetsMake(0, spacing/2, 0, -spacing/2);
     
-    self.sureBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -spacing/2, 0, spacing/2);
-    self.sureBtn.titleEdgeInsets = UIEdgeInsetsMake(0, spacing/2, 0, -spacing/2);
+    [self.view addSubview:self.verifyBtn];
+    [self.verifyBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.right.mas_equalTo(self.phoneField);
+        make.width.mas_equalTo(width(120.0));
+        make.top.mas_equalTo(self.phoneField.mas_bottom).offset(height(20));
+    }];
     
-    [self.sureBtn setImagePosition:LXMImagePositionLeft spacing:spacing];
-    [self.sureBtn addTarget:self action:@selector(getAuthWithUserInfoFromWechat) forControlEvents:UIControlEventTouchUpInside];
+    self.codeField = [HttpTool createField:@"请输入验证码" font:[UIFont systemFontOfSize:height(15)] color:BassColor(233, 233, 233) ishidden:NO];
+    self.codeField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
+    self.codeField.layer.borderWidth = 1.0;
+    self.codeField.layer.cornerRadius = 4.0;
+    self.codeField.keyboardType = UIKeyboardTypePhonePad;
+    self.codeField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入验证码" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
+    self.codeField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, width(10.0), height(44.0))];
+    self.codeField.leftViewMode = UITextFieldViewModeAlways;
+    [self.view addSubview:self.codeField];
+    [self.codeField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.height.mas_equalTo(self.phoneField);
+        make.right.mas_equalTo(self.verifyBtn.mas_left).offset(width(-15.0));
+        make.top.mas_equalTo(self.phoneField.mas_bottom).offset(height(20));
+    }];
+    
+    self.inviteField = [HttpTool createField:@"请输入邀请码（非必填）" font:[UIFont systemFontOfSize:height(15)] color:BassColor(51,51,51) ishidden: YES];
+    [self.inviteField setHidden:YES];
+    self.inviteField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
+    self.inviteField.layer.borderWidth = 1.0;
+    self.inviteField.layer.cornerRadius = 4.0;
+    self.inviteField.keyboardType = UIKeyboardTypePhonePad;
+    self.inviteField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"非邀请用户请输入20001" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
+    self.inviteField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, width(10.0), height(44.0))];
+    self.inviteField.leftViewMode = UITextFieldViewModeAlways;
+    [self.view addSubview:self.inviteField];
+    [self.inviteField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.height.mas_equalTo(self.phoneField);
+        make.top.mas_equalTo(self.codeField.mas_bottom).offset(height(20));
+    }];
+
+    UIButton * loginBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    loginBtn.backgroundColor = BassColor(17, 151, 255);
+    [loginBtn setTitle:@"登陆" forState:UIControlStateNormal];
+    loginBtn.titleLabel.font = [UIFont systemFontOfSize:height(17.0) weight:UIFontWeightMedium];
+    [loginBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    loginBtn.layer.masksToBounds = YES;
+    loginBtn.layer.cornerRadius = height(4);
+    [loginBtn addTarget: self action: @selector(clickLoginBtn) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:loginBtn];
+    [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.phoneField);
+        make.height.mas_equalTo(height(44.0));
+        make.top.mas_equalTo(self.codeField.mas_bottom).offset(height(35.0));
+    }];
+    
+    self.leftButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    [self.leftButton setTitle:@"忘记密码" forState:UIControlStateNormal];
+    self.leftButton.titleLabel.font = [UIFont systemFontOfSize:height(15.0)];
+    self.leftButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+    [self.leftButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [self.leftButton addTarget: self action: @selector(clickLeftButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.leftButton];
+    [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.phoneField).inset(width(5.0));
+        make.height.mas_equalTo(height(20.0));
+        make.top.mas_equalTo(loginBtn.mas_bottom).offset(height(15.0));
+    }];
+    
+    self.rightButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    [self.rightButton setTitle:@"账号密码登陆" forState:UIControlStateNormal];
+    self.rightButton.titleLabel.font = [UIFont systemFontOfSize:height(15.0)];
+    self.rightButton.titleLabel.textAlignment = NSTextAlignmentRight;
+    [self.rightButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [self.rightButton addTarget: self action: @selector(clickRightButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.rightButton];
+    [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.phoneField).inset(width(5.0));
+        make.centerY.height.mas_equalTo(self.leftButton);
+    }];
     
     UILabel * xieLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"", height(12)) textAlignmen:NSTextAlignmentCenter text:@"登陆即代表同意用户条款和隐私条款"];
     xieLable.font = [UIFont systemFontOfSize:height(12)];
-    [self.view addSubview:xieLable];
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"登陆即代表同意用户条款和隐私条款"];
     [attrStr setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}
                      range:NSMakeRange(7, 4)];
     [attrStr setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}
                      range:NSMakeRange(12, 4)];
     xieLable.attributedText = attrStr;
+    [self.view addSubview:xieLable];
     [xieLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height(20));
-        make.top.mas_equalTo(self.sureBtn.mas_bottom).offset(height(25));
-        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.bottom.mas_equalTo(self.view).inset(height(20.0) + kSafeAreaBottomHeight);
+        make.centerX.mas_equalTo(self.view);
         make.width.mas_equalTo(width(200));
     }];
     UIButton * lognBtn =[UIButton buttonWithType:UIButtonTypeCustom];
@@ -107,9 +192,8 @@
         }];
     }];
     [lognBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height(20));
-        make.top.mas_equalTo(self.sureBtn.mas_bottom).offset(height(25));
-        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.centerY.height.mas_equalTo(xieLable);
+        make.centerX.mas_equalTo(self.view);
         make.width.mas_equalTo(width(150));
     }];
     UIButton * lognBtn1 =[UIButton buttonWithType:UIButtonTypeCustom];
@@ -133,14 +217,130 @@
         }];
     }];
     [lognBtn1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height(20));
-        make.top.mas_equalTo(self.sureBtn.mas_bottom).offset(height(25));
+        make.centerY.height.mas_equalTo(xieLable);
         make.left.mas_equalTo(lognBtn.mas_right);
         make.width.mas_equalTo(width(150));
     }];
+    
+    self.wechatLoginBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+    self.wechatLoginBtn.layer.masksToBounds = true;
+    self.wechatLoginBtn.layer.cornerRadius = height(25.0);
+    self.wechatLoginBtn.backgroundColor = BassColor(17, 151, 255);
+    [self.wechatLoginBtn setImage: [UIImage imageNamed:@"wechatbai"] forState: UIControlStateNormal];
+    [self.view addSubview:self.wechatLoginBtn];
+    [self.wechatLoginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.view);
+        make.width.height.mas_equalTo(height(50.0));
+        make.bottom.mas_equalTo(xieLable.mas_top).offset(-height(20.0));
+    }];
+    [self.wechatLoginBtn addTarget:self action:@selector(getAuthWithUserInfoFromWechat) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.isPassword = false;
 }
-- (void)getAuthWithUserInfoFromWechat
-{
+
+- (void)setIsPassword:(BOOL)isPassword {
+    _isPassword = isPassword;
+    self.codeField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:isPassword ? @"请输入密码" : @"请输入验证码" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
+    [self.verifyBtn setHidden:isPassword];
+    [self.leftButton setHidden:!isPassword];
+    [self.rightButton setTitle:isPassword ? @"验证码登录" : @"账号密码登陆" forState:UIControlStateNormal];
+    self.codeField.keyboardType = isPassword ? UIKeyboardTypeDefault : UIKeyboardTypeNumberPad;
+    [self.codeField mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.height.mas_equalTo(self.phoneField);
+        make.top.mas_equalTo(self.phoneField.mas_bottom).offset(height(20));
+        if (!isPassword) {
+            make.right.mas_equalTo(self.verifyBtn.mas_left).offset(width(-15.0));
+        }else {
+            make.right.mas_equalTo(self.phoneField);
+        }
+    }];
+    [self.view layoutIfNeeded];
+}
+
+- (VerifyButtonUtils *)verifyBtn {
+    if (!_verifyBtn) {
+        _verifyBtn = [VerifyButtonUtils buttonWithType:UIButtonTypeCustom];
+        _verifyBtn.layer.masksToBounds = YES;
+        _verifyBtn.layer.cornerRadius = 4.0;
+        _verifyBtn.backgroundColor = BassColor(17, 151, 255);;
+        [_verifyBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+        [_verifyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];//[UIColor colorWithHexString:@"#3A71EE"]
+        _verifyBtn.titleLabel.font = [UIFont systemFontOfSize:height(15)];
+        [_verifyBtn addTarget:self action:@selector(verifyBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _verifyBtn;
+}
+
+//点击获取验证码
+- (void)verifyBtnClick {
+    
+    NSString *checkPhone = [StringUtils checkPhone:self.phoneField.text];
+    if (nil != checkPhone) {
+        [self showToastInView:self.view message:checkPhone duration:0.8];
+        return;
+    }
+    
+    [HttpTool get:nil dic:@{@"phone":self.phoneField.text} success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue]==200) {
+            
+            [self.verifyBtn startCountDown:60 normalTitle:@"重新发送" countDownTitle:@"s" normalColor:[UIColor clearColor] countDownColor:[UIColor clearColor]];
+            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+        } else {
+            
+            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+        }
+    } faile:^(NSError * _Nonnull erroe) {
+        
+    }];
+}
+
+-(void)clickLeftButton {
+    PasswordViewController *passwordVC = [[PasswordViewController alloc] initWithType:YES];
+    [self.navigationController pushViewController:passwordVC animated:YES];
+}
+
+-(void)clickRightButton {
+    self.isPassword = !_isPassword;
+}
+
+-(void)clickLoginBtn {
+    NSString *checkPhone = [StringUtils checkPhone:self.phoneField.text];
+    if (nil != checkPhone) {
+        [self showToastInView:self.view message:checkPhone duration:0.8];
+        return;
+    }
+    if (self.codeField.text.length == 0) {
+        [self showToastInView:self.view message:self.codeField.placeholder duration:0.8];
+        return;
+    }
+
+//    [HttpTool noHeardsPost:API_POST_register dic:@{@"openid":self.resp.openid,@"nickname":self.resp.name,@"headimg":self.resp.iconurl,@"phone":self.phoneField.text,@"invite":self.yanField.text} success:^(id  _Nonnull responce) {
+//
+//        if ([responce[@"code"] intValue]==200) {
+//            [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"token"] forKey:@"token"];
+//            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"isLogin"];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//
+//            UIWindow * window =[UIApplication sharedApplication].delegate.window;
+//            BassBarViewController * barVC =[[BassBarViewController alloc]init];
+//            window.rootViewController=barVC;
+//        }else{
+//              [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+////            SuccessViewController *VC =[[SuccessViewController alloc]init];
+////            VC.imgName = @"shibai";
+////            VC.status = @"绑定失败";
+////            VC.beiZhu = @"绑定失败，请检查自己的网络以及从新绑定，感谢配合～";
+////            VC.btnStr = @"确定";
+////            VC.indexType=1;
+////            [self.navigationController pushViewController:VC animated:YES];
+//
+//        }
+//    } faile:^(NSError * _Nonnull erroe) {
+//
+//    }];
+}
+
+- (void)getAuthWithUserInfoFromWechat {
     dispatch_async(dispatch_get_main_queue(), ^{
         [[UMSocialManager defaultManager] getUserInfoWithPlatform:UMSocialPlatformType_WechatSession currentViewController:nil completion:^(id result, NSError *error) {
             if (error) {
@@ -169,9 +369,7 @@
         }];
         
     });
-    
 }
-
 
 //判断微信是否授权过
 -(void)load_login:(NSString*)openid{
@@ -183,9 +381,7 @@
             [[NSUserDefaults standardUserDefaults] setObject:self.resp.openid forKey:@"openid"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            UIWindow * window =[UIApplication sharedApplication].delegate.window;
-            BassBarViewController * barVC =[[BassBarViewController alloc]init];
-            window.rootViewController=barVC;
+            [self showHomeViewController];
         }else if ([responce[@"code"] intValue]==201){
             BindPhoneVC * VC =[[BindPhoneVC alloc]init];
             VC.hidesBottomBarWhenPushed=YES;
@@ -200,14 +396,10 @@
     }];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)showHomeViewController {
+    UIWindow * window =[UIApplication sharedApplication].delegate.window;
+    BassBarViewController * barVC =[[BassBarViewController alloc]init];
+    window.rootViewController=barVC;
 }
-*/
 
 @end

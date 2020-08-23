@@ -26,10 +26,8 @@
 //    [self setNavTitle:@"绑定手机号"];
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(clickBtn)];
     [self createUI];
-    // Do any additional setup after loading the view.
 }
--(void)createUI
-{
+-(void)createUI {
     UILabel * logLable =[HttpTool createLable:BassColor(51,51,51) font:VPFont(@"PingFang-SC-Bold", height(20)) textAlignmen:NSTextAlignmentLeft text:@""];
     logLable.text = @"绑定手机号";
     [self.view addSubview:logLable];
@@ -165,9 +163,9 @@
     } faile:^(NSError * _Nonnull erroe) {
         
     }];
-    
 }
--(void)clickLoginBtn{
+
+-(void)clickLoginBtn {
     NSString *checkPhone = [StringUtils checkPhone:self.phoneField.text];
     if (nil != checkPhone) {
         [self showToastInView:self.view message:checkPhone duration:0.8];
@@ -203,14 +201,5 @@
         
     }];
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

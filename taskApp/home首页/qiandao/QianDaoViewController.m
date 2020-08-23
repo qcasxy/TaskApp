@@ -20,8 +20,6 @@
 @property (strong, nonatomic) NSCalendar *gregorian;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 
-
-
 @end
 
 @implementation QianDaoViewController
