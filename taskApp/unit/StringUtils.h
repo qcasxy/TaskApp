@@ -27,7 +27,7 @@
  *
  *   正确返回nil，异常返回错误描述
  */
-+ (NSString *)checkPassword:(NSString *)password;
++ (NSString *)checkPassword:(NSString *)password andMinLength:(int)minLength andMaxLength:(int)maxLength;
 
 /**
  *  密码验证

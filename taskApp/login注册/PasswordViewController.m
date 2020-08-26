@@ -8,6 +8,7 @@
 
 #import "PasswordViewController.h"
 #import "VerifyButtonUtils.h"
+#import "UIView+Toast.h"
 
 @interface PasswordViewController ()
 
@@ -25,6 +26,7 @@
 @implementation PasswordViewController
 
 -(void)clickBtn {
+    [self.view endEditing:true];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -46,7 +48,7 @@
     self.firstPasswordField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
     self.firstPasswordField.layer.borderWidth = 1.0;
     self.firstPasswordField.layer.cornerRadius = 4.0;
-    self.firstPasswordField.keyboardType = UIKeyboardTypePhonePad;
+    self.firstPasswordField.keyboardType = UIKeyboardTypeDefault;
     self.firstPasswordField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, width(10.0), height(34.0))];
     self.firstPasswordField.leftViewMode = UITextFieldViewModeAlways;
     [self.view addSubview:self.firstPasswordField];
@@ -55,7 +57,7 @@
     self.secondPasswordField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
     self.secondPasswordField.layer.borderWidth = 1.0;
     self.secondPasswordField.layer.cornerRadius = 4.0;
-    self.secondPasswordField.keyboardType = UIKeyboardTypePhonePad;
+    self.secondPasswordField.keyboardType = UIKeyboardTypeDefault;
     self.secondPasswordField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, width(10.0), height(34.0))];
     self.secondPasswordField.leftViewMode = UITextFieldViewModeAlways;
     [self.view addSubview:self.secondPasswordField];
@@ -71,7 +73,7 @@
     [loginBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     loginBtn.layer.masksToBounds = YES;
     loginBtn.layer.cornerRadius = height(4);
-    [loginBtn addTarget: self action: @selector(clickLoginBtn) forControlEvents:UIControlEventTouchUpInside];
+    [loginBtn addTarget: self action: @selector(clickSubmitBtn) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginBtn];
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.secondPasswordField);
@@ -105,7 +107,7 @@
         self.codeField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
         self.codeField.layer.borderWidth = 1.0;
         self.codeField.layer.cornerRadius = 4.0;
-        self.codeField.keyboardType = UIKeyboardTypePhonePad;
+        self.codeField.keyboardType = UIKeyboardTypeNumberPad;
         self.codeField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, width(10.0), height(34.0))];
         self.codeField.leftViewMode = UITextFieldViewModeAlways;
         [self.view addSubview:self.codeField];
@@ -155,55 +157,66 @@
         return;
     }
     
-    [HttpTool get:nil dic:@{@"phone":self.phoneField.text} success:^(id  _Nonnull responce) {
+    [HttpTool post:API_POST_sendSMS dic:@{@"phone":self.phoneField.text} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
-            
-            [self.verifyBtn startCountDown:60 normalTitle:@"重新发送" countDownTitle:@"s" normalColor:[UIColor clearColor] countDownColor:[UIColor clearColor]];
+            [self.verifyBtn startCountDown:60 normalTitle:@"重新发送" countDownTitle:@"s" normalColor:BassColor(17, 151, 255) countDownColor:BassColor(210, 210, 210)];
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         } else {
-            
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"验证码发送失败" duration:0.8];
     }];
 }
-
--(void)clickLoginBtn {
-    NSString *checkPhone = [StringUtils checkPhone:self.phoneField.text];
-    if (nil != checkPhone) {
-        [self showToastInView:self.view message:checkPhone duration:0.8];
+    
+-(void)clickSubmitBtn {
+    [self.view endEditing:true];
+    if (_isForget) {
+        NSString *checkPhone = [StringUtils checkPhone:self.phoneField.text];
+        if (nil != checkPhone) {
+            [self showToastInView:self.view message:checkPhone duration:0.8];
+            return;
+        }
+        if (self.codeField.text.length == 0) {
+            [self showToastInView:self.view message:self.codeField.placeholder duration:0.8];
+            return;
+        }
+    }
+    NSString *firstPwdResult = [StringUtils checkPassword:self.firstPasswordField.text andMinLength:6 andMaxLength:20];
+    if (![StringUtils isNullOrEmpty:firstPwdResult]) {
+        [self showToastInView:self.view message: firstPwdResult duration:0.8];
         return;
     }
-    if (self.codeField.text.length == 0) {
-        [self showToastInView:self.view message:self.codeField.placeholder duration:0.8];
+    NSString *secondPwdResult = [StringUtils checkPassword:self.secondPasswordField.text andConfirmPwd:self.firstPasswordField.text];
+    if (![StringUtils isNullOrEmpty:secondPwdResult]) {
+        [self showToastInView:self.view message: secondPwdResult duration:0.8];
         return;
     }
 
-//    [HttpTool noHeardsPost:API_POST_register dic:@{@"openid":self.resp.openid,@"nickname":self.resp.name,@"headimg":self.resp.iconurl,@"phone":self.phoneField.text,@"invite":self.yanField.text} success:^(id  _Nonnull responce) {
-//
-//        if ([responce[@"code"] intValue]==200) {
-//            [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"token"] forKey:@"token"];
-//            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"isLogin"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//
-//            UIWindow * window =[UIApplication sharedApplication].delegate.window;
-//            BassBarViewController * barVC =[[BassBarViewController alloc]init];
-//            window.rootViewController=barVC;
-//        }else{
-//              [self showToastInView:self.view message:responce[@"message"] duration:0.8];
-////            SuccessViewController *VC =[[SuccessViewController alloc]init];
-////            VC.imgName = @"shibai";
-////            VC.status = @"绑定失败";
-////            VC.beiZhu = @"绑定失败，请检查自己的网络以及从新绑定，感谢配合～";
-////            VC.btnStr = @"确定";
-////            VC.indexType=1;
-////            [self.navigationController pushViewController:VC animated:YES];
-//
-//        }
-//    } faile:^(NSError * _Nonnull erroe) {
-//
-//    }];
+    NSString *userId = [[NSUserDefaults standardUserDefaults] stringForKey:@"userid"];
+    if (!_isForget && [StringUtils isNullOrEmpty:userId]) {
+        [self showToastInView:self.view message: @"暂时无法修改密码，请重新登录后再试" duration:0.8];
+        return;
+    }
+    
+    NSString *host = API_POST_resetPassword;
+    NSDictionary *dic = @{@"password": self.firstPasswordField.text, @"repassword" : self.secondPasswordField.text, @"uid": userId};
+    if (_isForget) {
+        host = API_POST_forgetPassword;
+        dic = @{@"phone": self.phoneField.text, @"code": self.codeField.text, @"password": self.firstPasswordField.text, @"repassword" : self.secondPasswordField.text};
+    }
+    
+    [HttpTool post:host dic: dic success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue] == 200) {
+            [self.view makeToast: responce[@"message"] duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+                [self.navigationController popViewControllerAnimated:true];
+            }];
+        }else{
+            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+        }
+    } faile:^(NSError * _Nonnull erroe) {
+        [self showToastInView:self.view message: @"重置密码失败" duration:0.8];
+    }];
 }
 
 @end

@@ -12,6 +12,13 @@
 #define API_URL @"http://service.tt-xz.cn"//132.232.132.127
 //#define API_URL @"http://service.ruizhixue.cn"
 #define API_POST(api) [API_URL stringByAppendingString:api]
+//  2020-08-26 新增 By qcasxy
+#define API_POST_passwordLogin API_POST(@"/ht/faburenwu/index.php/api/accountlogin")//手机号密码登录
+#define API_POST_forgetPassword API_POST(@"/ht/faburenwu/index.php/api/forget")//忘记密码
+#define API_POST_resetPassword API_POST(@"/ht/faburenwu/index.php/api/setpassword")//设置密码
+#define API_POST_codeLogin API_POST(@"/ht/faburenwu/index.php/api/phonelogin")//手机号验证码登录
+#define API_POST_sendSMS API_POST(@"/ht/faburenwu/index.php/api/sendsms")//发送验证码
+
 #define API_POST_login API_POST(@"/ht/faburenwu/index.php/api/login")//微信是否授权过
 #define API_POST_register API_POST(@"/ht/faburenwu/index.php/api/register")//微信授权注册
 #define API_POST_userIndex API_POST(@"/ht/faburenwu/index.php/api/userIndex")//用户信息

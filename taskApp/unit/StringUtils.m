@@ -55,13 +55,17 @@ static NSString * const REGX_USERNAME = @"^[\u4e00-\u9fa5·]+$";
     return nil;
 }
 
-+ (NSString *)checkPassword:(NSString *)password {
++ (NSString *)checkPassword:(NSString *)password andMinLength:(int)minLength andMaxLength:(int)maxLength {
     if ([StringUtils isNullOrEmpty:password]) {
         return @"请输入密码";
     }
     
-    if (password.length < 6 || password.length > 20) {
-        return @"密码长度为6-12位";
+    if (password.length < minLength || password.length > maxLength) {
+        return [NSString stringWithFormat:@"密码长度为%d-%d位", minLength, maxLength];
+    }
+    
+    if (![StringUtils verifyString:password regx: [NSString stringWithFormat:@"(?=.*[0-9])(?=.*[a-zA-Z])(?!=.*[^a-zA-Z0-9]).{%d,%d}", minLength, maxLength]]) {
+        return [NSString stringWithFormat:@"密码格式有误（%d~%d位数字与字母组合）", minLength, maxLength];
     }
     
     return nil;

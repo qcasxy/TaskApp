@@ -19,6 +19,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:true];
+}
+
 -(void)setNavTitle:(NSString *)title{
     UILabel * titleLable = [[UILabel alloc]init];
     titleLable.textColor = BassColor(51, 51, 51);

@@ -25,6 +25,7 @@
 @property (nonatomic, strong) VerifyButtonUtils *verifyBtn;
 @property (nonatomic, strong) UIButton *leftButton;
 @property (nonatomic, strong) UIButton *rightButton;
+@property (nonatomic, strong) UIButton *loginBtn;
 
 @property (nonatomic, assign) BOOL isPassword;
 
@@ -103,7 +104,7 @@
     }];
     
     self.inviteField = [HttpTool createField:@"请输入邀请码（非必填）" font:[UIFont systemFontOfSize:height(15)] color:BassColor(51,51,51) ishidden: YES];
-    [self.inviteField setHidden:YES];
+    [self.inviteField setAlpha: 0.0];
     self.inviteField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
     self.inviteField.layer.borderWidth = 1.0;
     self.inviteField.layer.cornerRadius = 4.0;
@@ -117,16 +118,16 @@
         make.top.mas_equalTo(self.codeField.mas_bottom).offset(height(20));
     }];
 
-    UIButton * loginBtn =[UIButton buttonWithType:UIButtonTypeCustom];
-    loginBtn.backgroundColor = BassColor(17, 151, 255);
-    [loginBtn setTitle:@"登陆" forState:UIControlStateNormal];
-    loginBtn.titleLabel.font = [UIFont systemFontOfSize:height(17.0) weight:UIFontWeightMedium];
-    [loginBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    loginBtn.layer.masksToBounds = YES;
-    loginBtn.layer.cornerRadius = height(4);
-    [loginBtn addTarget: self action: @selector(clickLoginBtn) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:loginBtn];
-    [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.loginBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    self.loginBtn.backgroundColor = BassColor(17, 151, 255);
+    [self.loginBtn setTitle:@"登录" forState:UIControlStateNormal];
+    self.loginBtn.titleLabel.font = [UIFont systemFontOfSize:height(17.0) weight:UIFontWeightMedium];
+    [self.loginBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    self.loginBtn.layer.masksToBounds = YES;
+    self.loginBtn.layer.cornerRadius = height(4);
+    [self.loginBtn addTarget: self action: @selector(clickLoginBtn) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.loginBtn];
+    [self.loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.phoneField);
         make.height.mas_equalTo(height(44.0));
         make.top.mas_equalTo(self.codeField.mas_bottom).offset(height(35.0));
@@ -142,7 +143,7 @@
     [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.phoneField).inset(width(5.0));
         make.height.mas_equalTo(height(20.0));
-        make.top.mas_equalTo(loginBtn.mas_bottom).offset(height(15.0));
+        make.top.mas_equalTo(self.loginBtn.mas_bottom).offset(height(15.0));
     }];
     
     self.rightButton =[UIButton buttonWithType:UIButtonTypeCustom];
@@ -177,7 +178,6 @@
     [lognBtn setTitleColor:UIColor.whiteColor forState:0];
     [self.view addSubview:lognBtn];
     [[lognBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-
         [HttpTool NoHeardsGet:API_POST_website dic:@{} success:^(id  _Nonnull responce) {
             if ([responce[@"code"] intValue]==200) {
                 WebXieViewController * webVC =[[WebXieViewController alloc]init];
@@ -225,7 +225,7 @@
     self.wechatLoginBtn = [UIButton buttonWithType: UIButtonTypeCustom];
     self.wechatLoginBtn.layer.masksToBounds = true;
     self.wechatLoginBtn.layer.cornerRadius = height(25.0);
-    self.wechatLoginBtn.backgroundColor = BassColor(17, 151, 255);
+    self.wechatLoginBtn.backgroundColor = BassColor(26, 173, 25);
     [self.wechatLoginBtn setImage: [UIImage imageNamed:@"wechatbai"] forState: UIControlStateNormal];
     [self.view addSubview:self.wechatLoginBtn];
     [self.wechatLoginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -240,11 +240,18 @@
 
 - (void)setIsPassword:(BOOL)isPassword {
     _isPassword = isPassword;
+    if (isPassword) {
+        self.codeField.text = @"";
+        if (self.inviteField.alpha == 1.0) {
+            [self chagedInviteField: false];
+        }
+    }
     self.codeField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:isPassword ? @"请输入密码" : @"请输入验证码" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
     [self.verifyBtn setHidden:isPassword];
     [self.leftButton setHidden:!isPassword];
-    [self.rightButton setTitle:isPassword ? @"验证码登录" : @"账号密码登陆" forState:UIControlStateNormal];
+    [self.rightButton setTitle:isPassword ? @"验证码登录" : @"账号密码登录" forState:UIControlStateNormal];
     self.codeField.keyboardType = isPassword ? UIKeyboardTypeDefault : UIKeyboardTypeNumberPad;
+    [self.codeField setSecureTextEntry:isPassword];
     [self.codeField mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.height.mas_equalTo(self.phoneField);
         make.top.mas_equalTo(self.phoneField.mas_bottom).offset(height(20));
@@ -257,12 +264,28 @@
     [self.view layoutIfNeeded];
 }
 
+- (void)chagedInviteField:(BOOL)isShow {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.inviteField.alpha = isShow ? 1.0 : 0.0;
+        [self.loginBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.phoneField);
+            make.height.mas_equalTo(height(44.0));
+            if (isShow) {
+                make.top.mas_equalTo(self.inviteField.mas_bottom).offset(height(35.0));
+            }else {
+                make.top.mas_equalTo(self.codeField.mas_bottom).offset(height(35.0));
+            }
+        }];
+        [self.loginBtn.superview layoutIfNeeded];
+    }];
+}
+
 - (VerifyButtonUtils *)verifyBtn {
     if (!_verifyBtn) {
         _verifyBtn = [VerifyButtonUtils buttonWithType:UIButtonTypeCustom];
         _verifyBtn.layer.masksToBounds = YES;
         _verifyBtn.layer.cornerRadius = 4.0;
-        _verifyBtn.backgroundColor = BassColor(17, 151, 255);;
+        _verifyBtn.backgroundColor = BassColor(17, 151, 255);
         [_verifyBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
         [_verifyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];//[UIColor colorWithHexString:@"#3A71EE"]
         _verifyBtn.titleLabel.font = [UIFont systemFontOfSize:height(15)];
@@ -280,17 +303,18 @@
         return;
     }
     
-    [HttpTool get:nil dic:@{@"phone":self.phoneField.text} success:^(id  _Nonnull responce) {
+    [HttpTool post:API_POST_sendSMS dic:@{@"phone": self.phoneField.text} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
-            
-            [self.verifyBtn startCountDown:60 normalTitle:@"重新发送" countDownTitle:@"s" normalColor:[UIColor clearColor] countDownColor:[UIColor clearColor]];
-            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+            [self.verifyBtn startCountDown:60 normalTitle:@"重新发送" countDownTitle:@"s" normalColor:BassColor(17, 151, 255) countDownColor:BassColor(210, 210, 210)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+                [self chagedInviteField: ([responce[@"data"][@"status"] intValue] == 0)];
+            });
         } else {
-            
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"发送失败" duration: 0.8];
     }];
 }
 
@@ -304,6 +328,8 @@
 }
 
 -(void)clickLoginBtn {
+    [self.view endEditing:true];
+
     NSString *checkPhone = [StringUtils checkPhone:self.phoneField.text];
     if (nil != checkPhone) {
         [self showToastInView:self.view message:checkPhone duration:0.8];
@@ -314,30 +340,27 @@
         return;
     }
 
-//    [HttpTool noHeardsPost:API_POST_register dic:@{@"openid":self.resp.openid,@"nickname":self.resp.name,@"headimg":self.resp.iconurl,@"phone":self.phoneField.text,@"invite":self.yanField.text} success:^(id  _Nonnull responce) {
-//
-//        if ([responce[@"code"] intValue]==200) {
-//            [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"token"] forKey:@"token"];
-//            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"isLogin"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//
-//            UIWindow * window =[UIApplication sharedApplication].delegate.window;
-//            BassBarViewController * barVC =[[BassBarViewController alloc]init];
-//            window.rootViewController=barVC;
-//        }else{
-//              [self showToastInView:self.view message:responce[@"message"] duration:0.8];
-////            SuccessViewController *VC =[[SuccessViewController alloc]init];
-////            VC.imgName = @"shibai";
-////            VC.status = @"绑定失败";
-////            VC.beiZhu = @"绑定失败，请检查自己的网络以及从新绑定，感谢配合～";
-////            VC.btnStr = @"确定";
-////            VC.indexType=1;
-////            [self.navigationController pushViewController:VC animated:YES];
-//
-//        }
-//    } faile:^(NSError * _Nonnull erroe) {
-//
-//    }];
+    NSString *host = API_POST_passwordLogin;
+    NSDictionary *dic = @{@"phone": self.phoneField.text, @"password": self.codeField.text};
+    if (!_isPassword) {
+        host = API_POST_codeLogin;
+        dic = @{@"phone": self.phoneField.text, @"code": self.codeField.text};
+        if (self.inviteField.text.length != 0) {
+            dic = @{@"phone": checkPhone, @"code": self.codeField.text, @"invite": self.inviteField.text};
+        }
+    }
+    
+    [HttpTool noHeardsPost:host dic:dic success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue] == 200) {
+            [self saveLoginInfo:responce];
+
+            [self showHomeViewController];
+        }else{
+              [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+        }
+    } faile:^(NSError * _Nonnull erroe) {
+        [self showToastInView:self.view message:@"登录失败" duration:0.8];
+    }];
 }
 
 - (void)getAuthWithUserInfoFromWechat {
@@ -364,7 +387,6 @@
                 NSLog(@"Wechat iconurl: %@", self.resp.iconurl);
                 NSLog(@"Wechat gender: %@", self.resp.unionGender);
                 [self load_login:[NSString stringWithFormat:@"%@",self.resp.openid]];
-               
             }
         }];
         
@@ -376,10 +398,7 @@
      NSLog(@"==========: %@", self.resp.openid);
     [HttpTool noHeardsPost:API_POST_login dic:@{@"openid":openid} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
-            [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"token"] forKey:@"token"];
-            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"isLogin"];
-            [[NSUserDefaults standardUserDefaults] setObject:self.resp.openid forKey:@"openid"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            [self saveLoginInfo:responce];
             
             [self showHomeViewController];
         }else if ([responce[@"code"] intValue]==201){
@@ -390,10 +409,17 @@
         }else{
              [self showToastInView:self.view message:self.msg duration:0.8];
         }
-        
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"登录失败" duration:0.8];
     }];
+}
+
+-(void)saveLoginInfo:(NSDictionary *)responce {
+    [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"token"] forKey:@"token"];
+    [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"userid"] forKey:@"userid"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"isLogin"];
+    [[NSUserDefaults standardUserDefaults] setObject:self.resp.openid forKey:@"openid"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)showHomeViewController {
