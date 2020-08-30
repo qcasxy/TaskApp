@@ -30,11 +30,14 @@
 @property (nonatomic, assign) BOOL isPassword;
 
 @property(nonatomic,strong)UIButton * wechatLoginBtn;
+@property(nonatomic,strong)UILabel * descLab;
 @property(nonatomic,strong)UMSocialUserInfoResponse *resp;
 
 @end
 
 @implementation LoginViewController
+
+
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -222,20 +225,39 @@
         make.width.mas_equalTo(width(150));
     }];
     
+    self.descLab = [[UILabel alloc] init];
+    self.descLab.font = [UIFont systemFontOfSize:height(12)];
+    self.descLab.textColor = [UIColor whiteColor];
+    self.descLab.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.descLab];
+    [self.descLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.view);
+        make.left.right.equalTo(_phoneField);
+        make.bottom.mas_equalTo(xieLable.mas_top).offset(-height(15.0));
+    }];
+    
     self.wechatLoginBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+//    self.wechatLoginBtn.layer.borderWidth = 2.0;
+//    self.wechatLoginBtn.layer.borderColor = BassColor(56, 208, 47).CGColor;
     self.wechatLoginBtn.layer.masksToBounds = true;
-    self.wechatLoginBtn.layer.cornerRadius = height(25.0);
-    self.wechatLoginBtn.backgroundColor = BassColor(26, 173, 25);
+    self.wechatLoginBtn.layer.cornerRadius = height(45.0 / 2.0);
+    self.wechatLoginBtn.backgroundColor = BassColor(50, 189, 42);
     [self.wechatLoginBtn setImage: [UIImage imageNamed:@"wechatbai"] forState: UIControlStateNormal];
+    [self.wechatLoginBtn setTitle:@"  微信登录" forState:UIControlStateNormal];
+    [self.wechatLoginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.wechatLoginBtn.titleLabel.font = [UIFont systemFontOfSize:height(15.0)];
     [self.view addSubview:self.wechatLoginBtn];
     [self.wechatLoginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view);
-        make.width.height.mas_equalTo(height(50.0));
-        make.bottom.mas_equalTo(xieLable.mas_top).offset(-height(20.0));
+        make.width.mas_equalTo(width(150.0));
+        make.height.mas_equalTo(height(45.0));
+        make.bottom.mas_equalTo(_descLab.mas_top).offset(-height(10.0));
     }];
     [self.wechatLoginBtn addTarget:self action:@selector(getAuthWithUserInfoFromWechat) forControlEvents:UIControlEventTouchUpInside];
     
     self.isPassword = false;
+    
+    [self requestDesc];
 }
 
 - (void)setIsPassword:(BOOL)isPassword {
@@ -246,7 +268,7 @@
             [self chagedInviteField: false];
         }
     }
-    self.codeField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:isPassword ? @"请输入密码" : @"请输入验证码" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
+    self.codeField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:isPassword ? @"请输入密码(不少于6位数字、字母或组合)" : @"请输入验证码" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
     [self.verifyBtn setHidden:isPassword];
     [self.leftButton setHidden:!isPassword];
     [self.rightButton setTitle:isPassword ? @"验证码登录" : @"账号密码登录" forState:UIControlStateNormal];
@@ -315,6 +337,16 @@
         }
     } faile:^(NSError * _Nonnull erroe) {
         [self showToastInView:self.view message: @"发送失败" duration: 0.8];
+    }];
+}
+
+-(void)requestDesc {
+    [HttpTool post:API_POST_getDesc dic:@{} success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue]==200) {
+            self.descLab.text = responce[@"data"][@"content"];
+        }
+    } faile:^(NSError * _Nonnull erroe) {
+        
     }];
 }
 

@@ -44,7 +44,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
     
-    self.firstPasswordField = [HttpTool createField:@"设置密码（6位数字与字母组合）" font:[UIFont systemFontOfSize:height(15)] color:BassColor(51,51,51) ishidden: YES];
+    self.firstPasswordField = [HttpTool createField:@"设置密码(不少于6位数字、字母或组合)" font:[UIFont systemFontOfSize:height(15)] color:BassColor(51,51,51) ishidden: YES];
     self.firstPasswordField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
     self.firstPasswordField.layer.borderWidth = 1.0;
     self.firstPasswordField.layer.cornerRadius = 4.0;
@@ -91,7 +91,7 @@
         self.phoneField.leftViewMode = UITextFieldViewModeAlways;
         [self.view addSubview:self.phoneField];
         [self.phoneField mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.equalTo(self.view).inset(width(34.0));
+            make.left.right.equalTo(self.view).inset(width(24.0));
             make.height.mas_equalTo(height(34.0));
             make.top.mas_equalTo(self.view).inset(height(40) + NavHeight);
         }];
@@ -117,7 +117,7 @@
             make.top.mas_equalTo(self.phoneField.mas_bottom).offset(height(20));
         }];
         
-        self.firstPasswordField.placeholder = @"请输入新密码（6位数字与字母组合）";
+        self.firstPasswordField.placeholder = @"请输入新密码(不少于6位数字、字母或组合)";
         self.secondPasswordField.placeholder = @"请再次输入新密码";
         [loginBtn setTitle:@"修改" forState:UIControlStateNormal];
         
@@ -182,11 +182,16 @@
             return;
         }
     }
-    NSString *firstPwdResult = [StringUtils checkPassword:self.firstPasswordField.text andMinLength:6 andMaxLength:20];
-    if (![StringUtils isNullOrEmpty:firstPwdResult]) {
-        [self showToastInView:self.view message: firstPwdResult duration:0.8];
+    
+    if ([StringUtils isNullOrEmpty:self.firstPasswordField.text]) {
+        [self showToastInView:self.view message: @"请输入密码" duration:0.8];
         return;
     }
+    if (![StringUtils verifyString:self.firstPasswordField.text regx:@"(?!=.*[^a-zA-Z0-9]).{6,}"]) {
+        [self showToastInView:self.view message: @"密码格式有误：不少于6位数字、字母或组合" duration:0.8];
+        return;
+    }
+    
     NSString *secondPwdResult = [StringUtils checkPassword:self.secondPasswordField.text andConfirmPwd:self.firstPasswordField.text];
     if (![StringUtils isNullOrEmpty:secondPwdResult]) {
         [self showToastInView:self.view message: secondPwdResult duration:0.8];
