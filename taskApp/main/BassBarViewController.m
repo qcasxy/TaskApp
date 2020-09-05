@@ -11,7 +11,8 @@
 #import "TaskViewController.h"
 #import "MessageViewController.h"
 #import "MineViewController.h"
-@interface BassBarViewController ()
+
+@interface BassBarViewController()
 @property(nonatomic,assign)NSInteger  type;
 @end
 

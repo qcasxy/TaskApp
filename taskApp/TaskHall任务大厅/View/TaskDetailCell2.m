@@ -20,7 +20,8 @@
 
     // Configure the view for the selected state
 }
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.timelable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFang-SC-Medium", height(13)) textAlignmen:NSTextAlignmentLeft text:@"截止时间：2019-02-12 12:00"];
         [self addSubview:self.timelable];
@@ -29,7 +30,7 @@
             make.right.mas_equalTo(self.mas_right).offset(-width(10));
             make.top.mas_equalTo(self).offset(height(10));
         }];
-        self.xialable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFang-SC-Medium", height(13)) textAlignmen:NSTextAlignmentLeft text:@"下载链接"];
+        self.xialable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFang-SC-Medium", height(13)) textAlignmen:NSTextAlignmentLeft text:@"下载链接："];
         [self addSubview:self.xialable];
         [self.xialable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.mas_left).offset(width(10));
@@ -67,18 +68,18 @@
         self.comtlable.numberOfLines=0;
         [self addSubview:self.comtlable];
         [self.comtlable mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(renLable.mas_right).offset(width(10));
-            make.right.mas_equalTo(self.mas_right).offset(-width(10));
+            make.left.mas_equalTo(renLable.mas_right);
+            make.right.bottom.equalTo(self).inset(width(10));
             make.top.mas_equalTo(self.xialable.mas_bottom).offset(height(10));
-            make.bottom.mas_equalTo(self.mas_bottom).offset(-height(10));
         }];
     }
     return self;
 }
--(void)setDatadic:(NSDictionary *)datadic{
+
+-(void)setDatadic:(NSDictionary *)datadic {
     self.timelable.text = [NSString stringWithFormat:@"截止时间：%@",datadic[@"cuttime"]];
-    self.xialable.text =[NSString stringWithFormat:@"下载链接:%@",datadic[@"download"]];
-    NSMutableAttributedString *attriStr1 = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"下载链接:%@",datadic[@"download"]]];
+    self.xialable.text =[NSString stringWithFormat:@"下载链接：%@",datadic[@"download"]];
+    NSMutableAttributedString *attriStr1 = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"下载链接：%@",datadic[@"download"]]];
     
     [attriStr1 addAttribute:NSForegroundColorAttributeName value:BassColor(17, 151, 255) range:NSMakeRange(5, self.xialable.text.length-5)];
     self.xialable.attributedText = attriStr1;

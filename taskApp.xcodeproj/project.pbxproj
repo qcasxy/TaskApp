@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F360BB22503B5BD00ED2C91 /* TaskDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F360BB12503B5BD00ED2C91 /* TaskDetailTableViewCell.m */; };
 		2F8DBC4624F2C43B002887D9 /* PasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8DBC4524F2C43B002887D9 /* PasswordViewController.m */; };
 		8900DC132374217B008A8EDC /* HttpTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC102374217A008A8EDC /* HttpTool.m */; };
 		8900DC1B237421D3008A8EDC /* BassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC15237421D2008A8EDC /* BassTableViewController.m */; };
@@ -200,6 +201,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F360BB02503B5BD00ED2C91 /* TaskDetailTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskDetailTableViewCell.h; sourceTree = "<group>"; };
+		2F360BB12503B5BD00ED2C91 /* TaskDetailTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskDetailTableViewCell.m; sourceTree = "<group>"; };
 		2F8DBC4424F2C43B002887D9 /* PasswordViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PasswordViewController.h; sourceTree = "<group>"; };
 		2F8DBC4524F2C43B002887D9 /* PasswordViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PasswordViewController.m; sourceTree = "<group>"; };
 		4B73B38EE4516009B15A9197 /* Pods-taskApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taskApp.release.xcconfig"; path = "Target Support Files/Pods-taskApp/Pods-taskApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -599,6 +602,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F360BB32503B5C000ED2C91 /* Tast Detail */ = {
+			isa = PBXGroup;
+			children = (
+				2F360BB02503B5BD00ED2C91 /* TaskDetailTableViewCell.h */,
+				2F360BB12503B5BD00ED2C91 /* TaskDetailTableViewCell.m */,
+			);
+			path = "Tast Detail";
+			sourceTree = "<group>";
+		};
 		3A5AFAF43468BF5B980E0066 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1272,6 +1284,7 @@
 		89C1B60523794349006B1150 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2F360BB32503B5C000ED2C91 /* Tast Detail */,
 				89C1B6062379438B006B1150 /* TaskBtnView.h */,
 				89C1B6072379438B006B1150 /* TaskBtnView.m */,
 				891B9EEA237A4015007667FB /* TaskDetailCell0.h */,
@@ -2001,6 +2014,7 @@
 				891B9EF2237A60A5007667FB /* TaskDetailCollCell.m in Sources */,
 				89E55120237B95D900EEB2F9 /* PersonalDataVC.m in Sources */,
 				8900DCB223742250008A8EDC /* FileUtils.m in Sources */,
+				2F360BB22503B5BD00ED2C91 /* TaskDetailTableViewCell.m in Sources */,
 				893EDE7123757F7100534731 /* YJDetailVC.m in Sources */,
 				8900DC9B23742210008A8EDC /* LYEmptyBaseView.m in Sources */,
 				891B9F3F237A9AE4007667FB /* TZVideoPlayerController.m in Sources */,
@@ -2158,7 +2172,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.1;
+				CURRENT_PROJECT_VERSION = 1.0.2;
 				DEVELOPMENT_TEAM = 58UGPVH5XU;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2181,7 +2195,7 @@
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/WeChat",
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/QQ",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2264,7 +2278,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.1;
+				CURRENT_PROJECT_VERSION = 1.0.2;
 				DEVELOPMENT_TEAM = 58UGPVH5XU;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2287,7 +2301,7 @@
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/WeChat",
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/QQ",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

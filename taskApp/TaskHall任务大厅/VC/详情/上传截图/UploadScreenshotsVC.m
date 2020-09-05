@@ -11,20 +11,28 @@
 #import "TZTestCell.h"
 #import "SuccessViewController.h"
 @interface UploadScreenshotsVC ()<UICollectionViewDelegate,UICollectionViewDataSource,TZImagePickerControllerDelegate,UICollectionViewDelegateFlowLayout>
+
 @property (nonatomic, strong) UICollectionView * collection;
 @property (nonatomic, strong)NSMutableArray *selectedPhotos;
 @property (nonatomic, strong)NSMutableArray *selectedAssets;
-@property(nonatomic,strong)HGOrientationLabel * name;
-@property(nonatomic,strong)UILabel * beiLable;
+@property(nonatomic, strong)HGOrientationLabel * name;
+@property(nonatomic, strong)UILabel * beiLable;
+
+@property(nonatomic, strong)UITextField *trueNameField;
+@property(nonatomic, strong)UITextField *mobileField;
+
 @end
 
 @implementation UploadScreenshotsVC
+
 -(void)clickBtn{
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 -(void)sureBtn{
     [self load_screenshot];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor =UIColor.whiteColor;
@@ -39,25 +47,81 @@
     self.name.textColor = BassColor(0,0,0);
     self.name.backgroundColor = UIColor.whiteColor;
     self.name.font = VPFont(@"PingFang-SC-Medium", height(15));
-    self.name.text = [NSString stringWithFormat:@"任务:%@,完成后请发送截图",self.nameStr];
-    self.name.numberOfLines =3;
+    self.name.text = [NSString stringWithFormat:@"任务：%@,完成后请发送截图",self.nameStr];
+    self.name.numberOfLines = 3;
     self.name.textAlignment = NSTextAlignmentLeft;
     [self.name textAlign:^(HGMaker *make) {
         make.addAlignType(textAlignType_left).addAlignType(textAlignType_top);
     }];
     [self.view addSubview:self.name];
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height(85));
+//        make.height.mas_equalTo(height(85));
         make.top.mas_equalTo(line.mas_bottom).offset(height(10));
-        make.left.mas_equalTo(self.view.mas_left).offset(width(10));
-        make.right.mas_equalTo(self.view.mas_right).offset(-width(10));
+        make.left.right.mas_equalTo(self.view).inset(width(10.0));
     }];
+    
+    UILabel *trueNameFlagLabel = [[UILabel alloc] init];
+    trueNameFlagLabel.textColor = UIColor.blackColor;
+    trueNameFlagLabel.text = @"姓名：";
+    trueNameFlagLabel.font = VPFont(@"PingFang-SC-Medium", height(13));
+    [trueNameFlagLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.view addSubview:trueNameFlagLabel];
+    [trueNameFlagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.name);
+    }];
+    
+    UILabel *mobileFlagLabel = [[UILabel alloc] init];
+    mobileFlagLabel.textColor = UIColor.blackColor;
+    mobileFlagLabel.text = @"手机号：";
+    mobileFlagLabel.font = VPFont(@"PingFang-SC-Medium", height(13));
+    [mobileFlagLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.view addSubview:mobileFlagLabel];
+    [mobileFlagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(trueNameFlagLabel);
+        make.left.mas_equalTo(kScreenWidth / 2.0);
+    }];
+    
+    _trueNameField = [[UITextField alloc] init];
+    _trueNameField.borderStyle = UITextBorderStyleLine;
+    _trueNameField.placeholder = @"请输入真实姓名";
+    _trueNameField.font = [UIFont systemFontOfSize:width(13.0)];
+    [self.view addSubview:_trueNameField];
+    [_trueNameField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.name.mas_bottom).offset(height(10));
+        make.centerY.mas_equalTo(trueNameFlagLabel);
+        make.left.mas_equalTo(trueNameFlagLabel.mas_right);
+        make.right.mas_equalTo(mobileFlagLabel.mas_left).offset(width(-10.0));
+    }];
+    
+    _mobileField = [[UITextField alloc] init];
+    _mobileField.keyboardType = UIKeyboardTypePhonePad;
+    _mobileField.borderStyle = UITextBorderStyleLine;
+    _mobileField.placeholder = @"请输入手机号";
+    _mobileField.font = [UIFont systemFontOfSize:width(13.0)];
+    [self.view addSubview:_mobileField];
+    [_mobileField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(trueNameFlagLabel);
+        make.left.mas_equalTo(mobileFlagLabel.mas_right);
+        make.right.mas_equalTo(self.view).inset(width(10.0));
+    }];
+    
     [self.view addSubview:self.collection];
-    self.collection.frame = CGRectMake(width(15),height(100), kScreenWidth-width(30), height(100));
+    //    self.collection.frame = CGRectMake(width(15),height(100), kScreenWidth-width(30), height(100));
+    [self.collection mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view).inset(width(10.0));
+        make.top.mas_equalTo(_trueNameField.mas_bottom).offset(height(10.0));
+        make.height.mas_equalTo(height(100.0));
+    }];
+    
     self.beiLable=[HttpTool createLable:BassColor(161, 161, 161) font:VPFont(@"PingFangSC-Regular", height(11)) textAlignmen:NSTextAlignmentLeft text:@"注：单张图片上传限制2m，9张上传限制9m"];
     [self.view addSubview:self.beiLable];
-    self.beiLable.frame = CGRectMake(width(15),height(220), kScreenWidth-width(30), height(20));
+    [self.beiLable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view).inset(width(10.0));
+        make.top.mas_equalTo(_collection.mas_bottom).offset(height(10.0));
+        make.bottom.mas_lessThanOrEqualTo(self.view);
+    }];
 }
+
 -(UICollectionView*)collection{
     if (!_collection) {
         UICollectionViewFlowLayout * flow =[[UICollectionViewFlowLayout alloc]init];
@@ -69,8 +133,8 @@
     }
     return _collection;
 }
-#pragma mark UICollectionView
 
+#pragma mark UICollectionView
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (_selectedPhotos.count >= 9) {
         return _selectedPhotos.count;
@@ -79,8 +143,7 @@
     }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     TZTestCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZTestCell" forIndexPath:indexPath];
     if (indexPath.item == _selectedPhotos.count) {
         cell.imageView.image = [UIImage imageNamed:@"add"];
@@ -94,9 +157,11 @@
     [cell.deleteBtn addTarget:self action:@selector(deleteBtnClik:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     return CGSizeMake(100, 100);
 }
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 columnNumber:3 delegate:self pushPhotoPickerVc:YES];
     imagePickerVc.selectedAssets = _selectedAssets;
@@ -104,6 +169,7 @@
     //    UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
     [self presentViewController:imagePickerVc animated:YES completion:nil];
 }
+
 - (void)deleteBtnClik:(UIButton *)sender {
     if ([self collectionView:self.collection numberOfItemsInSection:0] <= _selectedPhotos.count) {
         [_selectedPhotos removeObjectAtIndex:sender.tag];
@@ -121,6 +187,7 @@
         [self->_collection reloadData];
     }];
 }
+
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto infos:(NSArray<NSDictionary *> *)infos {
     _selectedPhotos = [NSMutableArray arrayWithArray:photos];
     _selectedAssets = [NSMutableArray arrayWithArray:assets];
@@ -139,15 +206,31 @@
     for (PHAsset *phAsset in assets) {
         NSLog(@"location:%@",phAsset.location);
     }
-    
-    
 }
--(void)load_screenshot
-{
+
+- (void)load_screenshot {
+    NSString *tempName = _trueNameField.text;
+    if (tempName != nil && tempName.length <= 0) {
+        [self showToastInView:self.view message:@"请输入真实姓名" duration:0.8];
+        return;
+    }
+    
+    NSString *tempMobile = self.mobileField.text;
+    if (tempMobile != nil && tempMobile.length <= 0) {
+        [self showToastInView:self.view message:@"请输入手机号" duration:0.8];
+        return;
+    }
+    NSString *checkPhone = [StringUtils checkPhone:tempMobile];
+    if (nil != checkPhone) {
+        [self showToastInView:self.view message:checkPhone duration:0.8];
+        return;
+    }
+    
     if (self.selectedPhotos.count==0) {
         [self showToastInView:self.view message:@"请上传图片" duration:0.8];
         return;
     }
+    
     AFHTTPSessionManager * manager =[AFHTTPSessionManager manager];
     manager.responseSerializer   = [AFHTTPResponseSerializer serializer];
     manager.requestSerializer.timeoutInterval = 15;
@@ -163,9 +246,8 @@
         }
     }
     manager.requestSerializer = requestSerializer;
-
     
-    [manager POST:API_POST_screenshot parameters:@{@"id":self.orderid} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    [manager POST:API_POST_screenshot parameters:@{@"id" : self.orderid, @"truename" : tempName, @"phone" : tempMobile} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         for (int i=0; i<self.selectedPhotos.count; i++) {
             NSString *name = @"screenshot[]";
             NSData *imageData = UIImageJPEGRepresentation(self.selectedPhotos[i], 0.01);
@@ -204,14 +286,5 @@
         [self showToastInView:self.view message:@"网络错误" duration:0.8];
     }];
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

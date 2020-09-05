@@ -94,17 +94,17 @@
     }];
 }
 
--(UICollectionView*)homenCollection{
+-(UICollectionView*)homenCollection {
     if (!_homenCollection) {
-         UICollectionViewFlowLayout * flow =[[UICollectionViewFlowLayout alloc]init];
+        UICollectionViewFlowLayout * flow =[[UICollectionViewFlowLayout alloc]init];
         
-        _homenCollection =[[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight-NavHeight) collectionViewLayout:flow];
+        _homenCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight - NavHeight - TabBaHeight) collectionViewLayout:flow];
         _homenCollection.delegate =self;
         _homenCollection.dataSource=self;
         [_homenCollection registerClass:[HomeCell1 class] forCellWithReuseIdentifier:@"HomeCell1"];
-         [_homenCollection registerClass:[HomeCell2 class] forCellWithReuseIdentifier:@"HomeCell2"];
-         [_homenCollection registerClass:[HomeCell3 class] forCellWithReuseIdentifier:@"HomeCell3"];
-         [_homenCollection registerClass:[HomeCell4 class] forCellWithReuseIdentifier:@"HomeCell4"];
+        [_homenCollection registerClass:[HomeCell2 class] forCellWithReuseIdentifier:@"HomeCell2"];
+        [_homenCollection registerClass:[HomeCell3 class] forCellWithReuseIdentifier:@"HomeCell3"];
+        [_homenCollection registerClass:[HomeCell4 class] forCellWithReuseIdentifier:@"HomeCell4"];
         
         _homenCollection.backgroundColor =UIColor.whiteColor;
     }
@@ -186,38 +186,38 @@
     if (indexPath.section==0) {
         
     }
-//    else if (indexPath.section==1){
-//        if (indexPath.row==0) {
-////            [HttpTool get:API_POST_clockRecord dic:@{} success:^(id  _Nonnull responce) {
-////                if ([responce[@"code"] intValue]==200) {
-////                    NSDate *date =[NSDate date];//简书 FlyElephant
-////                    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-////                    [formatter setDateFormat:@"yyyy"];
-////                    NSInteger currentYear=[[formatter stringFromDate:date] integerValue];
-////                    [formatter setDateFormat:@"MM"];
-////                    NSInteger currentMonth=[[formatter stringFromDate:date]integerValue];
-////                    NSMutableArray * titleArr =[NSMutableArray new];
-////                    //创建一个数组记录已经签过到的天
-////                    [responce[@"data"][@"calendar"] enumerateObjectsUsingBlock:^(NSDictionary *  obj, NSUInteger idx, BOOL * _Nonnull stop) {
-////                        if ([obj[@"status"] intValue]==1) {
-////                            [titleArr addObject:[NSString stringWithFormat:@"%ld-%ld-%@",(long)currentYear,(long)currentMonth,obj[@"day"]]];
-////                        }
-////
-////                    }];
-////                    QianDaoViewController *VC =[[QianDaoViewController alloc]init];
-////                    VC.hidesBottomBarWhenPushed =YES;
-////                    VC.dataArr = titleArr;
-////                    VC.datadic =responce[@"data"];
-////                    [self.navigationController pushViewController:VC animated:YES];
-////                }
-////
-////            } faile:^(NSError * _Nonnull erroe) {
-////
-////            }];
-//            [self showToastInView:self.view message:@"暂未开放" duration:0.8];
-//
-//        }
-//    }
+    //    else if (indexPath.section==1){
+    //        if (indexPath.row==0) {
+    ////            [HttpTool get:API_POST_clockRecord dic:@{} success:^(id  _Nonnull responce) {
+    ////                if ([responce[@"code"] intValue]==200) {
+    ////                    NSDate *date =[NSDate date];//简书 FlyElephant
+    ////                    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    ////                    [formatter setDateFormat:@"yyyy"];
+    ////                    NSInteger currentYear=[[formatter stringFromDate:date] integerValue];
+    ////                    [formatter setDateFormat:@"MM"];
+    ////                    NSInteger currentMonth=[[formatter stringFromDate:date]integerValue];
+    ////                    NSMutableArray * titleArr =[NSMutableArray new];
+    ////                    //创建一个数组记录已经签过到的天
+    ////                    [responce[@"data"][@"calendar"] enumerateObjectsUsingBlock:^(NSDictionary *  obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    ////                        if ([obj[@"status"] intValue]==1) {
+    ////                            [titleArr addObject:[NSString stringWithFormat:@"%ld-%ld-%@",(long)currentYear,(long)currentMonth,obj[@"day"]]];
+    ////                        }
+    ////
+    ////                    }];
+    ////                    QianDaoViewController *VC =[[QianDaoViewController alloc]init];
+    ////                    VC.hidesBottomBarWhenPushed =YES;
+    ////                    VC.dataArr = titleArr;
+    ////                    VC.datadic =responce[@"data"];
+    ////                    [self.navigationController pushViewController:VC animated:YES];
+    ////                }
+    ////
+    ////            } faile:^(NSError * _Nonnull erroe) {
+    ////
+    ////            }];
+    //            [self showToastInView:self.view message:@"暂未开放" duration:0.8];
+    //
+    //        }
+    //    }
     else if (indexPath.section==1){
         XinVipVC * VC=[[XinVipVC alloc]init];
         VC.hidesBottomBarWhenPushed=YES;

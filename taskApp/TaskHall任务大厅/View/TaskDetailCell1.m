@@ -22,6 +22,7 @@
 
     // Configure the view for the selected state
 }
+
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.timelable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFang-SC-Medium", height(13)) textAlignmen:NSTextAlignmentLeft text:@"截止时间：2019-02-12 12:00"];
@@ -50,6 +51,7 @@
     }
     return self;
 }
+
 -(void)setDatadic:(NSDictionary *)datadic{
     self.timelable.text = [NSString stringWithFormat:@"截止时间：%@",datadic[@"cuttime"]];
     NSString * descStr;
