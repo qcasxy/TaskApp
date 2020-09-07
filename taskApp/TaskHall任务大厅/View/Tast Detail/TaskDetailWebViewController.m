@@ -1,37 +1,31 @@
-
-
-
-
 //
-//  HomeWebViC.m
+//  TaskDetailWebViewController.m
 //  taskApp
 //
-//  Created by per on 2020/1/4.
+//  Created by 秦程 on 2020/9/7.
 //  Copyright © 2020 per. All rights reserved.
 //
 
-#import "HomeWebViC.h"
+#import "TaskDetailWebViewController.h"
 #import <WebKit/WebKit.h>
 
-@interface HomeWebViC ()<WKNavigationDelegate>
+@interface TaskDetailWebViewController ()
 
 @property(nonatomic, strong)WKWebView *webView;
 
 @end
 
-@implementation HomeWebViC
+@implementation TaskDetailWebViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setNavTitle:self.name];
-    [self showDGActView];
+    [self setNavTitle: @"任务详情"];
     self.view.backgroundColor =BassColor(241, 241, 241);
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(goToBack)];
     
     // 正文
     _webView = [[WKWebView alloc] initWithFrame: self.view.bounds];
-    _webView.navigationDelegate = self;
-    [_webView loadRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:_urlStr]]];
+    [_webView loadHTMLString:_context baseURL:nil];
     [self.view addSubview:_webView];
     
     if (@available(iOS 11.0, *)) {
@@ -49,13 +43,8 @@
     }
 }
 
--(void)goToBack{
+-(void)goToBack {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-// 开始接收到返回数据
-- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
-    [self stopDGActView];
 }
 
 @end

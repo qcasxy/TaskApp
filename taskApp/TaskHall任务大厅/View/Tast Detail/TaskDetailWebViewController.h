@@ -1,8 +1,8 @@
 //
-//  HomeWebViC.h
+//  TaskDetailWebViewController.h
 //  taskApp
 //
-//  Created by per on 2020/1/4.
+//  Created by 秦程 on 2020/9/7.
 //  Copyright © 2020 per. All rights reserved.
 //
 
@@ -10,11 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HomeWebViC : BassMianViewController
+@interface TaskDetailWebViewController : BassMianViewController
 
 @property(nonatomic,copy)NSString * context;
-@property(nonatomic,copy)NSString * name;
-@property(nonatomic,copy)NSString * urlStr;
 
 @end
 

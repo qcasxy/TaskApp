@@ -12,7 +12,7 @@
 #import "TaskDetailTableViewCell.h"
 #import "TaskDetailCollCell.h"
 #import "UploadScreenshotsVC.h"
-#import "HomeWebViC.h"
+#import "TaskDetailWebViewController.h"
 
 @interface RegisDetailVC ()<UITableViewDelegate,UITableViewDataSource,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SDPhotoBrowserDelegate>
 
@@ -56,8 +56,8 @@
         make.width.mas_equalTo(width(345));
         make.bottom.mas_equalTo(self.view.mas_bottom).offset(-height(34.0) - kSafeAreaBottomHeight);
     }];
+    
     [[sureBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-       
             if ([self.dataDic[@"draw"] intValue]==5) {
                 [sureBtn setTitle:@"领取任务" forState:0];
                 [self load_lingQu_drawTask];
@@ -96,11 +96,17 @@
         [_showInfos removeAllObjects];
     }
     [_showInfos addObject: @{@"截止时间：": [[NSAttributedString alloc] initWithString:_dataDic[@"cuttime"] attributes:@{}]}];
-    if (_dataDic[@"download"] != nil) {
+    if (_dataDic[@"download"] != nil && [_dataDic[@"download"] length] > 0 ) {
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:_dataDic[@"download"] attributes:@{NSForegroundColorAttributeName : BassColor(17, 151, 255)}];
         [_showInfos addObject:@{@"下载链接：": attrStr}];
     }
-    if (_dataDic[@"desc"] != nil) {
+    NSMutableArray *newArr = [NSMutableArray array];
+    [dataDic[@"desc"] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj length] > 0) {
+            [newArr addObject:obj];
+        }
+    }];
+    if (newArr != nil && newArr.count > 0) {
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:[_dataDic[@"desc"] componentsJoinedByString:@";\n"] attributes:@{}];
         [_showInfos addObject:@{@"任务要求：": attrStr}];
     }
@@ -145,8 +151,8 @@
         _tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight - NavHeight) style:UITableViewStyleGrouped];
         _tableView.backgroundColor =[UIColor whiteColor];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.delegate =self;
-        _tableView.dataSource =self;
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
         _tableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectMake(0.0, 0.0, kScreenWidth, height(108))];
         [_tableView registerClass:[TaskDetailCell0 class] forCellReuseIdentifier:@"TaskDetailCell0"];
         [_tableView registerClass:[TaskDetailCell2 class] forCellReuseIdentifier:@"TaskDetailCell2"];
@@ -178,8 +184,11 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             [[cell.goBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
                 NSURL *tempURL = [NSURL URLWithString:self.dataDic[@"download"]];
+                NSURL *tempURL2 = [NSURL URLWithString: [NSString stringWithFormat:@"http://%@", self.dataDic[@"download"]]];
                 if (tempURL != nil && [[UIApplication sharedApplication] canOpenURL:tempURL]) {
                     [[UIApplication sharedApplication] openURL:tempURL];
+                }else if (tempURL2 != nil && [[UIApplication sharedApplication] canOpenURL: tempURL2]) {
+                    [[UIApplication sharedApplication] openURL:tempURL2];
                 }else {
                     [self showToastInView:self.view message: @"无法打开该链接" duration: 0.8];
                 }
@@ -206,6 +215,12 @@
 //                    webVC.hidesBottomBarWhenPushed = YES;
 //                    [self.navigationController pushViewController:webVC animated:YES];
 //                    return;
+                
+//                TaskDetailWebViewController * webVC = [[TaskDetailWebViewController alloc] init];
+//                webVC.context = @"<p>4123123123131412312</p><p><img title=\"1599471587773731.png\" alt=\"微信.png\" src=\"http://service.tt-xz.cn/ht/faburenwu/public/ueditor/php/upload/image/20200907/1599471587773731.png\"/></p>";
+//                [self.navigationController pushViewController:webVC animated:YES];
+//                return;
+                
                 [[UIApplication sharedApplication] openURL: tempURL];
                 return;
             }
@@ -239,12 +254,12 @@
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    UIView * footView =[[UIView alloc]init];
+    UIView * footView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, kScreenWidth, 0.01)];
     if (section != tableView.numberOfSections - 1) {
-        footView.frame = CGRectMake(0, 0, kScreenWidth, 0.0001);
-    }else {
+        footView.frame = CGRectMake(0, 0, kScreenWidth, 0.01);
+    }else if ([self.dataDic[@"cover"] count] != 0) {
         footView.frame = CGRectMake(0, 0, kScreenWidth, 100);
-        UILabel * nameLable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFangSC-Medium", height(13)) textAlignmen:NSTextAlignmentLeft text:@"   任务示列图："];
+        UILabel * nameLable = [HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFangSC-Medium", height(13)) textAlignmen:NSTextAlignmentLeft text:@"   任务示列图："];
         [footView addSubview:nameLable];
         nameLable.backgroundColor= UIColor.whiteColor;
         [nameLable mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -254,7 +269,7 @@
         }];
         [footView addSubview:self.collection];
     }
-    footView.backgroundColor = BassColor(241, 241, 241);
+    footView.backgroundColor = [UIColor clearColor];
     
     return footView;
 }

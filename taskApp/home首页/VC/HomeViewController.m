@@ -259,9 +259,17 @@
 -(void)goToWeb:(NSInteger)index {
     if (index < self.coverUrlArr.count) {
         NSString* urlStr = self.coverUrlArr[index];
+        
+        NSURL *url;
+        
         if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString: urlStr]]) {
+            url = [NSURL URLWithString: urlStr];
+        }else if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]]]) {
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]];
+        }
+        if (url != nil) {
             HomeWebViC * webVC =[[HomeWebViC alloc]init];
-            webVC.urlStr = urlStr;
+            webVC.urlStr = url.absoluteString;
             webVC.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:webVC animated:YES];
             return;

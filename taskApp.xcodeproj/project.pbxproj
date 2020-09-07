@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2F360BB22503B5BD00ED2C91 /* TaskDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F360BB12503B5BD00ED2C91 /* TaskDetailTableViewCell.m */; };
 		2F8DBC4624F2C43B002887D9 /* PasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8DBC4524F2C43B002887D9 /* PasswordViewController.m */; };
+		2F91CBF72506736F0087BAEC /* TaskDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F91CBF62506736F0087BAEC /* TaskDetailWebViewController.m */; };
 		8900DC132374217B008A8EDC /* HttpTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC102374217A008A8EDC /* HttpTool.m */; };
 		8900DC1B237421D3008A8EDC /* BassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC15237421D2008A8EDC /* BassTableViewController.m */; };
 		8900DC1C237421D3008A8EDC /* BassBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8900DC17237421D2008A8EDC /* BassBarViewController.m */; };
@@ -205,6 +206,8 @@
 		2F360BB12503B5BD00ED2C91 /* TaskDetailTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskDetailTableViewCell.m; sourceTree = "<group>"; };
 		2F8DBC4424F2C43B002887D9 /* PasswordViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PasswordViewController.h; sourceTree = "<group>"; };
 		2F8DBC4524F2C43B002887D9 /* PasswordViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PasswordViewController.m; sourceTree = "<group>"; };
+		2F91CBF52506736F0087BAEC /* TaskDetailWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskDetailWebViewController.h; sourceTree = "<group>"; };
+		2F91CBF62506736F0087BAEC /* TaskDetailWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskDetailWebViewController.m; sourceTree = "<group>"; };
 		4B73B38EE4516009B15A9197 /* Pods-taskApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taskApp.release.xcconfig"; path = "Target Support Files/Pods-taskApp/Pods-taskApp.release.xcconfig"; sourceTree = "<group>"; };
 		744D17FDA7873656905D9677 /* Pods_taskApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_taskApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8900DC0E23742179008A8EDC /* HeaderSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderSet.h; sourceTree = "<group>"; };
@@ -607,6 +610,8 @@
 			children = (
 				2F360BB02503B5BD00ED2C91 /* TaskDetailTableViewCell.h */,
 				2F360BB12503B5BD00ED2C91 /* TaskDetailTableViewCell.m */,
+				2F91CBF52506736F0087BAEC /* TaskDetailWebViewController.h */,
+				2F91CBF62506736F0087BAEC /* TaskDetailWebViewController.m */,
 			);
 			path = "Tast Detail";
 			sourceTree = "<group>";
@@ -2024,6 +2029,7 @@
 				8E8C74622374668D0074AE24 /* MessageViewController.m in Sources */,
 				8900DC8323742202008A8EDC /* DGActivityIndicatorNineDotsAnimation.m in Sources */,
 				89F2C078237506080035F9D2 /* HomeCell1.m in Sources */,
+				2F91CBF72506736F0087BAEC /* TaskDetailWebViewController.m in Sources */,
 				8900DC8723742202008A8EDC /* DGActivityIndicatorBallBeatAnimation.m in Sources */,
 				898E02E623765D7C0033F5D5 /* CompletedVC.m in Sources */,
 				89F2C07B237506160035F9D2 /* HomeCell2.m in Sources */,
