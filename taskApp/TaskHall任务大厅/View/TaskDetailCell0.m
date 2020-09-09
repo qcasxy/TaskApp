@@ -67,13 +67,13 @@
 }
 -(void)setDatadic:(NSDictionary *)datadic{
     self.name.text = datadic[@"title"];
-    self.leftlable.text = [NSString stringWithFormat:@"奖励:%@",datadic[@"money"]];
+    self.leftlable.text = [NSString stringWithFormat:@"奖励：%@",datadic[@"money"]];
     if ([datadic[@"cateid"] intValue]==2) {
-        self.rightlable.text = [NSString stringWithFormat:@"需要人数:%d/%@",[datadic[@"num"] intValue]-[datadic[@"surplus"] intValue],datadic[@"num"]];
+        self.rightlable.text = [NSString stringWithFormat:@"需要人数：%d/%@",[datadic[@"num"] intValue]-[datadic[@"surplus"] intValue],datadic[@"num"]];
     }else if([datadic[@"cateid"] intValue]==3){
-         self.rightlable.text = [NSString stringWithFormat:@"需要人数:%d/%@",[datadic[@"num"] intValue]-[datadic[@"surplus"] intValue],datadic[@"num"]];
+         self.rightlable.text = [NSString stringWithFormat:@"需要人数：%d/%@",[datadic[@"num"] intValue]-[datadic[@"surplus"] intValue],datadic[@"num"]];
     }else{
-        self.rightlable.text = [NSString stringWithFormat:@"需要人数:%d/%@",[datadic[@"num"] intValue]-[datadic[@"surplus"] intValue],datadic[@"num"]];
+        self.rightlable.text = [NSString stringWithFormat:@"需要人数：%d/%@",[datadic[@"num"] intValue]-[datadic[@"surplus"] intValue],datadic[@"num"]];
     }
 }
 @end

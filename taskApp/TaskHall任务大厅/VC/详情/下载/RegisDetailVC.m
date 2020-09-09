@@ -110,23 +110,22 @@
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:[_dataDic[@"desc"] componentsJoinedByString:@";\n"] attributes:@{}];
         [_showInfos addObject:@{@"任务要求：": attrStr}];
     }
-    if (_dataDic[@"filetype"] != nil && [_dataDic[@"filetype"] intValue] != 0) {
-        NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:@"显示任务详情" attributes:@{NSForegroundColorAttributeName : BassColor(17, 151, 255)}];
-
-        if ([_dataDic[@"filetype"] intValue] == 1) {
-            NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
-            para.lineSpacing = 5;
-            para.paragraphSpacing = 10;
-            
-            NSDictionary *options = @{ NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType,
-                                       NSCharacterEncodingDocumentAttribute :@(NSUTF8StringEncoding),
-                                       NSParagraphStyleAttributeName : para,
-                                       NSFontAttributeName : VPFont(@"PingFang-SC-Medium", height(13))};
-            
-            attrStr = [[NSAttributedString alloc] initWithData:[_dataDic[@"infodetail"] dataUsingEncoding:NSUnicodeStringEncoding] options:options documentAttributes:nil error:nil];
-            
-        }
+    if ([_dataDic[@"detail"] isKindOfClass:[NSString class]] && [_dataDic[@"detail"] length] > 0 ) {
+        NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
+        para.lineSpacing = 5;
+        para.paragraphSpacing = 10;
+        
+        NSDictionary *options = @{ NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType,
+                                   NSCharacterEncodingDocumentAttribute :@(NSUTF8StringEncoding),
+                                   NSParagraphStyleAttributeName : para,
+                                   NSFontAttributeName : VPFont(@"PingFang-SC-Medium", height(13))};
+        NSString *htmlStr = [_dataDic[@"detail"] stringByReplacingOccurrencesOfString:@"src=\"/ht" withString: [NSString stringWithFormat: @"src=\"%@/ht", API_URL]];
+        NSAttributedString *attrStr = [[NSAttributedString alloc] initWithData:[htmlStr dataUsingEncoding:NSUnicodeStringEncoding] options:options documentAttributes:nil error:nil];
         [_showInfos addObject:@{@"任务详情：": attrStr}];
+    }
+    if ([_dataDic[@"detailfile"] isKindOfClass:[NSString class]] && [_dataDic[@"detailfile"] length] > 0 ) {
+        NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:@"显示任务详情附件" attributes:@{NSForegroundColorAttributeName : BassColor(17, 151, 255)}];
+        [_showInfos addObject:@{@"详情附件：": attrStr}];
     }
 }
 
@@ -207,11 +206,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 1 && indexPath.row < _showInfos.count) {
-        if ([_showInfos[indexPath.row].allKeys.firstObject containsString:@"任务详情"] && [_dataDic[@"filetype"] intValue] == 2) {
-            NSURL *tempURL = [NSURL URLWithString: self.dataDic[@"infodetail"]];
+        if ([_showInfos[indexPath.row].allKeys.firstObject containsString:@"详情附件"]) {
+            NSURL *tempURL = [NSURL URLWithString: self.dataDic[@"detailfile"]];
             if ([[UIApplication sharedApplication] canOpenURL: tempURL]) {
 //                    HomeWebViC * webVC =[[HomeWebViC alloc]init];
-//                    webVC.urlStr = self.dataDic[@"infodetail"];
+//                    webVC.urlStr = self.dataDic[@"detail"];
 //                    webVC.hidesBottomBarWhenPushed = YES;
 //                    [self.navigationController pushViewController:webVC animated:YES];
 //                    return;
