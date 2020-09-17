@@ -52,10 +52,11 @@
     // 正文
     _webView = [[WKWebView alloc] initWithFrame: self.view.bounds];
     _webView.navigationDelegate = self;
+    _webView.scrollView.bounces = false;
     if (_isURL) {
         [_webView loadRequest: [NSURLRequest requestWithURL: _url]];
         [self showDGActView];
-    }else {
+    }else if (_context != nil) {
         [_webView loadHTMLString:_context baseURL:[NSURL URLWithString:API_URL]];
     }
     [self.view addSubview:_webView];

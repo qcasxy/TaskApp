@@ -142,7 +142,10 @@
                                    NSCharacterEncodingDocumentAttribute :@(NSUTF8StringEncoding),
                                    NSParagraphStyleAttributeName : para,
                                    NSFontAttributeName : VPFont(@"PingFang-SC-Medium", height(13))};
-        NSString *htmlStr = [_dataDic[@"detail"] stringByReplacingOccurrencesOfString:@"src=\"/ht" withString: [NSString stringWithFormat: @"src=\"%@/ht", API_URL]];
+        NSString *htmlStr = @"";
+        if (_taskModel.detail != nil) {
+            htmlStr = _taskModel.detail;
+        }
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithData:[htmlStr dataUsingEncoding:NSUnicodeStringEncoding] options:options documentAttributes:nil error:nil];
         [_showInfos addObject:@{@"任务详情：": attrStr}];
     }
