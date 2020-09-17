@@ -272,7 +272,7 @@
         if (self.bannerArr[index].type == 1) {
             if (self.bannerArr[index].detail != nil) {
                 HomeWebViC * webVC =[[HomeWebViC alloc] initWithContent:self.bannerArr[index].detail];
-                webVC.name = @"详情";
+                webVC.name = self.bannerArr[index].title;
                 webVC.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:webVC animated:YES];
                 return;
@@ -289,7 +289,7 @@
             }
             if (url != nil) {
                 HomeWebViC * webVC =[[HomeWebViC alloc] initWithURL:url];
-                webVC.name = @"详情";
+                webVC.name = self.bannerArr[index].title;
                 webVC.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:webVC animated:YES];
                 return;

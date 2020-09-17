@@ -41,7 +41,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setNavTitle: self.name];
+    if (self.name == nil) {
+        [self setNavTitle: @"详情"];
+    }else {
+        [self setNavTitle: self.name];
+    }
     self.view.backgroundColor =BassColor(241, 241, 241);
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(goToBack)];
     

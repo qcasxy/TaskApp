@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *detail;
 @property (nonatomic, assign) NSInteger id;
 @property (nonatomic, copy) NSString *url;
+@property (nonatomic, copy) NSString *title;
 
 @end
 
