@@ -12,9 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HomeWebViC : BassMianViewController
 
-@property(nonatomic,copy)NSString * context;
-@property(nonatomic,copy)NSString * name;
-@property(nonatomic,copy)NSString * urlStr;
+@property(nonatomic, copy)NSString * context;
+@property(nonatomic, copy)NSString * name;
+@property(nonatomic, copy)NSURL * url;
+
+-(instancetype)initWithURL:(NSURL *) url;
+-(instancetype)initWithContent:(NSString *) htmlString;
 
 @end
 

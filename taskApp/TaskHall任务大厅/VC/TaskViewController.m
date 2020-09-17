@@ -199,18 +199,19 @@
     ListModel * model =self.listArr[indexPath.row];
     [HttpTool get:API_POST_taskInfo dic:@{@"id":model.listID} success:^(id  _Nonnull responce) {
         [self stopDGActView];
-        if ([responce[@"code"] intValue] == 200) {
+        TaskInfoModel *model = [TaskInfoModel mj_objectWithKeyValues:responce[@"data"]];
+        if ([responce[@"code"] intValue] == 200 && model != nil) {
             if ([responce[@"data"][@"cateid"] intValue]==1) {
-                RegisDetailVC * VC =[[RegisDetailVC alloc]init];
-                VC.hidesBottomBarWhenPushed=YES;
-                VC.homeIndex=101;
-                VC.dataDic =responce[@"data"];
+                RegisDetailVC * VC = [[RegisDetailVC alloc] initModel:model];
+                VC.hidesBottomBarWhenPushed = YES;
+                VC.homeIndex = 101;
+                VC.dataDic = responce[@"data"];
                 [self.navigationController pushViewController:VC animated:YES];
             }else {
-                OrdinaryVC * VC =[[OrdinaryVC alloc]init];
-                VC.hidesBottomBarWhenPushed=YES;
-                VC.dataDic =responce[@"data"];
-                VC.homeIndex=101;
+                OrdinaryVC * VC = [[OrdinaryVC alloc] initModel:model];
+                VC.hidesBottomBarWhenPushed = YES;
+                VC.dataDic = responce[@"data"];
+                VC.homeIndex = 101;
                 [self.navigationController pushViewController:VC animated:YES];
             }
         }else {

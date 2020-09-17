@@ -25,6 +25,13 @@
 
 @implementation RegisDetailVC
 
+-(instancetype)initModel:(TaskInfoModel *) model {
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _taskModel = model;
+    }
+    return self;
+}
+
 - (void)clickBtn {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -35,7 +42,7 @@
     [self setNavTitle:@"领取任务"];
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(clickBtn)];
     [self.view addSubview:self.tableView];
-    UIButton*sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     if ([self.dataDic[@"draw"] intValue]==5) {
         [sureBtn setTitle:@"领取任务" forState:0];
     }else if ([self.dataDic[@"draw"] intValue]==1) {
@@ -61,8 +68,8 @@
             if ([self.dataDic[@"draw"] intValue]==5) {
                 [sureBtn setTitle:@"领取任务" forState:0];
                 [self load_lingQu_drawTask];
-            }else if ([self.dataDic[@"draw"] intValue]==1) {
-                UploadScreenshotsVC * VC =[[UploadScreenshotsVC alloc]init];
+            }else if ([self.dataDic[@"draw"] intValue] == 1 && self.taskModel != nil) {
+                UploadScreenshotsVC * VC = [[UploadScreenshotsVC alloc] initModel:self.taskModel];
                 VC.hidesBottomBarWhenPushed=YES;
                 VC.nameStr = self.dataDic[@"title"];
                 VC.orderid = self.dataDic[@"id"];
@@ -75,7 +82,7 @@
                 [self showToastInView:self.view message:@"已完成" duration:0.8];
                 return ;
             }else{
-                UploadScreenshotsVC * VC =[[UploadScreenshotsVC alloc]init];
+                UploadScreenshotsVC * VC =[[UploadScreenshotsVC alloc] initModel:self.taskModel];
                 VC.hidesBottomBarWhenPushed=YES;
                 VC.nameStr = self.dataDic[@"title"];
                 VC.orderid = self.dataDic[@"id"];

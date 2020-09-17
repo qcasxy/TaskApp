@@ -12,9 +12,10 @@
 #import "ListModel.h"
 #import "OrderDownloadVC.h"
 #import "OrderDetailVC.h"
+#import "TaskInfoModel.h"
+
 @interface OrderAllVC ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)UITableView * tableView;
-@property(nonatomic,strong)NSMutableArray * dataArr;
 @property(nonatomic,assign)int page;
 @property(nonatomic,strong)NSMutableArray * listArr;
 @property(nonatomic,strong)NSMutableArray * lableArr;
@@ -22,25 +23,34 @@
 
 @implementation OrderAllVC
 
+- (instancetype)initType:(int)type {
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _type = type;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.view.backgroundColor = BassColor(241, 241, 241);
     [self.view addSubview:self.tableView];
     self.lableArr=[[NSMutableArray alloc]init];
     self.page=1;
-    self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         self.page=1;
         [self load_taskRecord:YES];
     }];
-    self.tableView.mj_footer =[MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         self.page++;
         [self load_taskRecord:NO];
     }];
     [self load_taskRecord:YES];
     // Do any additional setup after loading the view.
 }
+
 -(void)load_taskRecord:(BOOL)isYes{
-    [HttpTool get:API_POST_taskRecord dic:@{@"type":@"1",@"pagesize":@"15",@"page":[NSString stringWithFormat:@"%d",self.page]} success:^(id  _Nonnull responce) {
+    [HttpTool get:API_POST_taskRecord dic:@{@"type":[NSString stringWithFormat:@"%d",self.type],@"pagesize":@"15",@"page":[NSString stringWithFormat:@"%d",self.page]} success:^(id  _Nonnull responce) {
         self.tableView.ly_emptyView =[MyDIYEmpty diyNoDataEmpty];
         [self.tableView.mj_footer endRefreshing];
         [self.tableView.mj_header endRefreshing];
@@ -140,16 +150,16 @@
     ListModel * model =self.listArr[indexPath.section];
     [HttpTool get:API_POST_taskDetails dic:@{@"id":model.listID} success:^(id  _Nonnull responce) {
         NSLog(@"12%@",responce);
-        if ([responce[@"code"] intValue]==200) {
+        TaskDetailModel *model = [TaskDetailModel mj_objectWithKeyValues:responce[@"data"]];
+        if ([responce[@"code"] intValue] == 200 && model != nil) {
             if ([responce[@"data"][@"cateid"] intValue]==1) {
-                
-                OrderDownloadVC * VC =[[OrderDownloadVC alloc]init];
+                OrderDownloadVC * VC =[[OrderDownloadVC alloc] initModel:model];
                 VC.hidesBottomBarWhenPushed=YES;
                 VC.dataDic =responce[@"data"];
                 [self.navigationController pushViewController:VC animated:YES];
                 
             }else{
-                OrderDetailVC * VC =[[OrderDetailVC alloc]init];
+                OrderDetailVC * VC =[[OrderDetailVC alloc] initModel:model];
                 VC.hidesBottomBarWhenPushed=YES;
                 VC.dataDic =responce[@"data"];
                 [self.navigationController pushViewController:VC animated:YES];
@@ -159,14 +169,5 @@
         
     }];
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

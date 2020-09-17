@@ -19,10 +19,13 @@
 #import "HomeWebViC.h"
 #import "XinVipVC.h"
 #import "MineModel.h"
+#import "HomeBannerModel.h"
+
 @interface HomeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,HomeCell1Delegate>
 @property(nonatomic,strong)UICollectionView * homenCollection;
 @property(nonatomic,strong)NSMutableArray * listArr;
 @property(nonatomic,strong)NSMutableArray * lableArr;
+@property(nonatomic,strong)NSArray<HomeBannerModel *> * bannerArr;
 @property(nonatomic,strong)NSMutableArray * coverArr;
 @property(nonatomic,strong)NSMutableArray * coverUrlArr;
 @property(nonatomic,strong)MineModel * cellModel;
@@ -37,9 +40,10 @@
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
     [self setLeftButton:@"赚钱中心" imgStr:@"" selector:@selector(clickBtn)];
-    self.lableArr =[[NSMutableArray alloc]init];
-    self.coverArr =[[NSMutableArray alloc]init];
-    self.coverUrlArr =[[NSMutableArray alloc]init];
+    self.bannerArr = [NSArray array];
+    self.lableArr = [[NSMutableArray alloc]init];
+    self.coverArr = [[NSMutableArray alloc]init];
+    self.coverUrlArr = [[NSMutableArray alloc]init];
     [self.view addSubview:self.homenCollection];
     [self load_home_index];
     self.homenCollection.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
@@ -77,10 +81,12 @@
             [self.coverArr removeAllObjects];
             [self.lableArr removeAllObjects];
             
+            self.bannerArr = [HomeBannerModel mj_objectArrayWithKeyValuesArray:responce[@"data"][@"banner"]];
             [responce[@"data"][@"banner"] enumerateObjectsUsingBlock:^(NSDictionary* obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 [self.coverArr addObject:obj[@"cover"]];
-                [self.coverUrlArr addObject:obj[@"url"]];
+//                [self.coverUrlArr addObject:obj[@"url"]];
             }];
+            
             self.listArr = [ListModel mj_objectArrayWithKeyValuesArray:responce[@"data"][@"list"]];
             [responce[@"data"][@"list"] enumerateObjectsUsingBlock:^(NSDictionary * dic, NSUInteger idx, BOOL * _Nonnull stop) {
                 [self.lableArr addObject:[LableModel mj_objectArrayWithKeyValuesArray:dic[@"label"]]];
@@ -121,15 +127,16 @@
         return self.listArr.count;
     }
 }
+
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 4;
 }
-- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==0) {
-        HomeCell1 * cell1 =[collectionView dequeueReusableCellWithReuseIdentifier:@"HomeCell1" forIndexPath:indexPath];
+        HomeCell1 * cell1 = [collectionView dequeueReusableCellWithReuseIdentifier:@"HomeCell1" forIndexPath:indexPath];
         cell1.coverArr = self.coverArr;
-        cell1.delegate=self;
+        cell1.delegate = self;
         return cell1;
     }else if (indexPath.section==1){
         HomeCell2 * cell2=[collectionView dequeueReusableCellWithReuseIdentifier:@"HomeCell2" forIndexPath:indexPath];
@@ -151,6 +158,7 @@
         return cell4;
     }
 }
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section==0) {
         return CGSizeMake(kScreenWidth, height(210));
@@ -161,27 +169,29 @@
     }else{
         return CGSizeMake(kScreenWidth, height(85));
     }
-    
 }
+
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     if (section==1) {
         return UIEdgeInsetsMake(0, 0, 1, 0);
     }
     return UIEdgeInsetsMake(0, 0, 0, 0);
 }
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
-{
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (section==1) {
         return 1;
     }
     return 0.0001;
 }
+
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
     if (section==1) {
         return 1;
     }
     return 0.0001;
 }
+
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section==0) {
         
@@ -228,18 +238,19 @@
         ListModel * model = self.listArr[indexPath.row];
         [HttpTool get:API_POST_taskInfo dic:@{@"id":model.listID} success:^(id  _Nonnull responce) {
             [self stopDGActView];
-            if ([responce[@"code"] intValue]==200) {
+            TaskInfoModel *model = [TaskInfoModel mj_objectWithKeyValues:responce[@"data"]];
+            if ([responce[@"code"] intValue] == 200 && model != nil) {
                 if ([responce[@"data"][@"cateid"] intValue]==1) {
-                    RegisDetailVC * VC =[[RegisDetailVC alloc]init];
+                    RegisDetailVC * VC = [[RegisDetailVC alloc] initModel:model];
                     VC.hidesBottomBarWhenPushed=YES;
                     VC.dataDic = responce[@"data"];
                     VC.homeIndex = 102;
                     [self.navigationController pushViewController:VC animated:YES];
                 }else {
-                    OrdinaryVC * VC =[[OrdinaryVC alloc]init];
+                    OrdinaryVC * VC =[[OrdinaryVC alloc] initModel:model];
                     VC.hidesBottomBarWhenPushed=YES;
-                    VC.homeIndex=102;
-                    VC.dataDic =responce[@"data"];
+                    VC.homeIndex = 102;
+                    VC.dataDic = responce[@"data"];
                     [self.navigationController pushViewController:VC animated:YES];
                 }
             }else {
@@ -257,22 +268,32 @@
 }
 
 -(void)goToWeb:(NSInteger)index {
-    if (index < self.coverUrlArr.count) {
-        NSString* urlStr = self.coverUrlArr[index];
-        
-        NSURL *url;
-        
-        if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString: urlStr]]) {
-            url = [NSURL URLWithString: urlStr];
-        }else if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]]]) {
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]];
-        }
-        if (url != nil) {
-            HomeWebViC * webVC =[[HomeWebViC alloc]init];
-            webVC.urlStr = url.absoluteString;
-            webVC.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:webVC animated:YES];
-            return;
+    if (index < self.bannerArr.count) {
+        if (self.bannerArr[index].type == 1) {
+            if (self.bannerArr[index].detail != nil) {
+                HomeWebViC * webVC =[[HomeWebViC alloc] initWithContent:self.bannerArr[index].detail];
+                webVC.name = @"详情";
+                webVC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:webVC animated:YES];
+                return;
+            }
+        }else {
+            NSString* urlStr = self.bannerArr[index].url;
+            
+            NSURL *url;
+            
+            if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString: urlStr]]) {
+                url = [NSURL URLWithString: urlStr];
+            }else if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]]]) {
+                url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]];
+            }
+            if (url != nil) {
+                HomeWebViC * webVC =[[HomeWebViC alloc] initWithURL:url];
+                webVC.name = @"详情";
+                webVC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:webVC animated:YES];
+                return;
+            }
         }
     }
     [self showToastInView:self.view message: @"无法打开该页面" duration: 0.8];

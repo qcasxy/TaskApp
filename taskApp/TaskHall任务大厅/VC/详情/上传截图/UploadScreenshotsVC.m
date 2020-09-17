@@ -25,6 +25,13 @@
 
 @implementation UploadScreenshotsVC
 
+-(instancetype)initModel:(TaskBaseModel *) model {
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _taskModel = model;
+    }
+    return self;
+}
+
 -(void)clickBtn{
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -60,37 +67,54 @@
         make.left.right.mas_equalTo(self.view).inset(width(10.0));
     }];
     
+    NSMutableAttributedString *nameStr = [[NSMutableAttributedString alloc] initWithString: @"姓名：" attributes:@{NSFontAttributeName : VPFont(@"PingFang-SC-Medium", height(13)),
+                                                                                                                NSForegroundColorAttributeName: [UIColor blackColor]}];
+//    if (_taskModel.realneed == 1) {
+//        [nameStr insertAttributedString:[[NSAttributedString alloc] initWithString:@"*" attributes:@{NSFontAttributeName : VPFont(@"PingFang-SC-Medium", height(13)),
+//                                                                                                     NSForegroundColorAttributeName: [UIColor redColor]}] atIndex: 2];
+//    }
+    
+    NSMutableAttributedString *phoneStr = [[NSMutableAttributedString alloc] initWithString: @"手机号：" attributes:@{NSFontAttributeName : VPFont(@"PingFang-SC-Medium", height(13)),
+                                                                                                                 NSForegroundColorAttributeName: [UIColor blackColor]}];
+//    if (_taskModel.phoneneed == 1) {
+//        [phoneStr insertAttributedString:[[NSAttributedString alloc] initWithString:@"*" attributes:@{NSFontAttributeName : VPFont(@"PingFang-SC-Medium", height(13)),
+//                                                                                                      NSForegroundColorAttributeName: [UIColor redColor]}] atIndex: 3];
+//    }
+    
+    UIView *trueNameView = [[UIView alloc] init];
+    [trueNameView setHidden: _taskModel.realneed != 1];
+    [self.view addSubview: trueNameView];
+    
+    UIView *mobileView = [[UIView alloc] init];
+    [mobileView setHidden: _taskModel.phoneneed != 1];
+    [self.view addSubview: mobileView];
+    
     UILabel *trueNameFlagLabel = [[UILabel alloc] init];
-    trueNameFlagLabel.textColor = UIColor.blackColor;
-    trueNameFlagLabel.text = @"姓名：";
-    trueNameFlagLabel.font = VPFont(@"PingFang-SC-Medium", height(13));
+    trueNameFlagLabel.attributedText = nameStr;
     [trueNameFlagLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.view addSubview:trueNameFlagLabel];
+    [trueNameView addSubview:trueNameFlagLabel];
     [trueNameFlagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.name);
+        make.left.centerY.mas_equalTo(trueNameView);
+        make.height.mas_lessThanOrEqualTo(trueNameView);
     }];
     
     UILabel *mobileFlagLabel = [[UILabel alloc] init];
-    mobileFlagLabel.textColor = UIColor.blackColor;
-    mobileFlagLabel.text = @"手机号：";
-    mobileFlagLabel.font = VPFont(@"PingFang-SC-Medium", height(13));
+    mobileFlagLabel.attributedText = phoneStr;
     [mobileFlagLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.view addSubview:mobileFlagLabel];
+    [mobileView addSubview:mobileFlagLabel];
     [mobileFlagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(trueNameFlagLabel);
-        make.left.mas_equalTo(kScreenWidth / 2.0);
+        make.left.centerY.mas_equalTo(mobileView);
+        make.height.mas_lessThanOrEqualTo(mobileView);
     }];
     
     _trueNameField = [[UITextField alloc] init];
     _trueNameField.borderStyle = UITextBorderStyleLine;
     _trueNameField.placeholder = @"请输入真实姓名";
     _trueNameField.font = [UIFont systemFontOfSize:width(13.0)];
-    [self.view addSubview:_trueNameField];
+    [trueNameView addSubview:_trueNameField];
     [_trueNameField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.name.mas_bottom).offset(height(10));
-        make.centerY.mas_equalTo(trueNameFlagLabel);
+        make.top.right.bottom.mas_equalTo(trueNameView);
         make.left.mas_equalTo(trueNameFlagLabel.mas_right);
-        make.right.mas_equalTo(mobileFlagLabel.mas_left).offset(width(-10.0));
     }];
     
     _mobileField = [[UITextField alloc] init];
@@ -98,18 +122,43 @@
     _mobileField.borderStyle = UITextBorderStyleLine;
     _mobileField.placeholder = @"请输入手机号";
     _mobileField.font = [UIFont systemFontOfSize:width(13.0)];
-    [self.view addSubview:_mobileField];
+    [mobileView addSubview:_mobileField];
     [_mobileField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(trueNameFlagLabel);
+        make.right.top.bottom.mas_equalTo(mobileView);
         make.left.mas_equalTo(mobileFlagLabel.mas_right);
-        make.right.mas_equalTo(self.view).inset(width(10.0));
     }];
+        
+    UIView *topView = self.name;
+    if (_taskModel.realneed == 1) {
+        if (_taskModel.phoneneed == 1) {
+            [trueNameView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self.name);
+                make.top.mas_equalTo(self.name.mas_bottom).offset(height(10));
+                make.right.mas_equalTo(mobileView.mas_left).offset(width(-10.0));
+            }];
+            [mobileView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.name);
+                make.centerY.width.mas_equalTo(trueNameView);
+            }];
+        }else {
+            [trueNameView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(self.name);
+                make.top.mas_equalTo(self.name.mas_bottom).offset(height(10));
+            }];
+        }
+        topView = trueNameView;
+    }else if (_taskModel.phoneneed == 1) {
+        [mobileView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.name);
+            make.top.mas_equalTo(self.name.mas_bottom).offset(height(10));
+        }];
+        topView = mobileView;
+    }
     
     [self.view addSubview:self.collection];
-    //    self.collection.frame = CGRectMake(width(15),height(100), kScreenWidth-width(30), height(100));
     [self.collection mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view).inset(width(10.0));
-        make.top.mas_equalTo(_trueNameField.mas_bottom).offset(height(10.0));
+        make.top.mas_equalTo(topView.mas_bottom).offset(height(10.0));
         make.height.mas_equalTo(height(100.0));
     }];
     
@@ -210,13 +259,13 @@
 
 - (void)load_screenshot {
     NSString *tempName = _trueNameField.text;
-    if (tempName != nil && tempName.length <= 0) {
+    if (_taskModel.realneed == 1 && (tempName != nil && tempName.length <= 0)) {
         [self showToastInView:self.view message:@"请输入真实姓名" duration:0.8];
         return;
     }
     
     NSString *tempMobile = self.mobileField.text;
-    if (tempMobile != nil && tempMobile.length <= 0) {
+    if (_taskModel.phoneneed == 1 && (tempMobile != nil && tempMobile.length <= 0)) {
         [self showToastInView:self.view message:@"请输入手机号" duration:0.8];
         return;
     }

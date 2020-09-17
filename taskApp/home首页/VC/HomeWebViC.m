@@ -16,22 +16,44 @@
 @interface HomeWebViC ()<WKNavigationDelegate>
 
 @property(nonatomic, strong)WKWebView *webView;
+@property(nonatomic, assign)BOOL isURL;
 
 @end
 
 @implementation HomeWebViC
 
+
+-(instancetype)initWithURL:(NSURL *) url {
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _isURL = YES;
+        _url = url;
+    }
+    return self;
+}
+
+-(instancetype)initWithContent:(NSString *) htmlString {
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _isURL = NO;
+        _context = htmlString;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setNavTitle:self.name];
-    [self showDGActView];
+    [self setNavTitle: self.name];
     self.view.backgroundColor =BassColor(241, 241, 241);
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(goToBack)];
     
     // 正文
     _webView = [[WKWebView alloc] initWithFrame: self.view.bounds];
     _webView.navigationDelegate = self;
-    [_webView loadRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:_urlStr]]];
+    if (_isURL) {
+        [_webView loadRequest: [NSURLRequest requestWithURL: _url]];
+        [self showDGActView];
+    }else {
+        [_webView loadHTMLString:_context baseURL:[NSURL URLWithString:API_URL]];
+    }
     [self.view addSubview:_webView];
     
     if (@available(iOS 11.0, *)) {
@@ -42,14 +64,12 @@
         
         _webView.scrollView.scrollIndicatorInsets = _webView.scrollView.contentInset;
         
-    }
-    else
-    {
+    }else {
         self.automaticallyAdjustsScrollViewInsets=NO;
     }
 }
 
--(void)goToBack{
+-(void)goToBack {
     [self.navigationController popViewControllerAnimated:YES];
 }
 

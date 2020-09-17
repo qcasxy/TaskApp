@@ -7,13 +7,20 @@
 //
 
 #import "BassMianViewController.h"
+#import "TaskInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UploadScreenshotsVC : BassMianViewController
+
+@property(nonatomic,strong)TaskBaseModel *taskModel;
+
 @property(nonatomic,copy)NSString * nameStr;
 @property(nonatomic,copy)NSString * orderid;
 @property(nonatomic,assign)int indx;
+
+-(instancetype)initModel:(TaskBaseModel *) model;
+
 @end
 
 NS_ASSUME_NONNULL_END

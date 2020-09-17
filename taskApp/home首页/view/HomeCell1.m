@@ -11,6 +11,7 @@
 @property(nonatomic,strong)SDCycleScrollView *cycleScrollView;
 @end
 @implementation HomeCell1
+
 -(id)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
         // 图片轮播
@@ -27,9 +28,11 @@
     }
     return self;
 }
+
 -(void)setCoverArr:(NSMutableArray *)coverArr{
-    self.cycleScrollView.imageURLStringsGroup =coverArr;
+    self.cycleScrollView.imageURLStringsGroup = coverArr;
 }
+
 /** 点击图片回调 */
 - (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index{
     if (self.delegate&&[self.delegate respondsToSelector:@selector(goToWeb:)]) {

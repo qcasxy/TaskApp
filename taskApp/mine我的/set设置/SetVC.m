@@ -30,7 +30,7 @@
     [self setNavTitle:@"设置"];
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(clickBtn)];
     [self.view addSubview:self.tableView];
-     self.dataArr=[MineModel mj_objectArrayWithKeyValuesArray:@[@{@"name":@"设置密码",@"img":@"lishi"},@{@"name":@"清除缓存",@"img":@"lishi"},@{@"name":@"检查更新",@"img":@"gongzuo"},@{@"name":@"关于我们",@"img":@"bangzhu"}]];
+    self.dataArr=[MineModel mj_objectArrayWithKeyValuesArray:@[@{@"name":@"设置密码",@"img":@"lishi"},@{@"name":@"清除缓存",@"img":@"lishi"},@{@"name":@"检查更新",@"img":@"gongzuo"},@{@"name":@"关于我们",@"img":@"bangzhu"}]];
     // Do any additional setup after loading the view.
 }
 
@@ -114,7 +114,7 @@
     UIView * footView =[[UIView alloc]init];
     footView.frame= CGRectMake(0, 0, kScreenWidth, 0.0001);
     footView.backgroundColor = BassColor(241, 241, 241);
-   
+    
     return footView;
 }
 
@@ -132,22 +132,35 @@
         [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
         
         [self presentViewController:alertController animated:YES completion:nil];
-    }else if (indexPath.section==2){
+    }else if (indexPath.section==2) {
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-        [HttpTool get:API_POST_checkBb dic:@{@"type":@"2",@"bbnum":[NSString stringWithFormat:@"%@",  [infoDictionary objectForKey:@"CFBundleShortVersionString"]]} success:^(id  _Nonnull responce) {
+        [HttpTool get:API_POST_checkBb dic:@{@"type":@"2", @"bbnum": [NSString stringWithFormat:@"%@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]]} success:^(id  _Nonnull responce) {
             if ([responce[@"code"] intValue]==200) {
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"是否更新" message:@"发现新的版本" preferredStyle:UIAlertControllerStyleAlert];
-                [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"是", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                   
-                }]];
-                [alertController addAction:[UIAlertAction actionWithTitle:@"否" style:UIAlertActionStyleCancel handler:nil]];
+                NSString* urlStr = responce[@"data"];
                 
-                [self presentViewController:alertController animated:YES completion:nil];
+                NSURL *url;
+                
+                if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString: urlStr]]) {
+                    url = [NSURL URLWithString: urlStr];
+                }else if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]]]) {
+                    url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]];
+                }
+                if (url != nil) {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"是否更新" message:@"发现新的版本" preferredStyle:UIAlertControllerStyleAlert];
+                    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"是", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [[UIApplication  sharedApplication] openURL:url];
+                    }]];
+                    [alertController addAction:[UIAlertAction actionWithTitle:@"否" style:UIAlertActionStyleCancel handler:nil]];
+                    
+                    [self presentViewController:alertController animated:YES completion:nil];
+                }else {
+                    [self showToastInView:self.view message:@"暂时无法更新！" duration:0.8];
+                }
             }else{
-               [self showToastInView:self.view message:@"已是最新版本" duration:0.8];
+                [self showToastInView:self.view message:@"已是最新版本" duration:0.8];
             }
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self showToastInView:self.view message:@"网络错误\n暂时无法更新！" duration:0.8];
         }];
         
     }else{

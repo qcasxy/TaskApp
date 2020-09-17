@@ -101,7 +101,7 @@
     }];
     UIView * line1 =[[UIView alloc]init];
     line1.backgroundColor=BassColor(229, 163, 54);
-     line1.hidden=YES;
+    line1.hidden=YES;
     [backView addSubview:line1];
     [line1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(huangBtn.mas_bottom).offset(height(5));
@@ -120,9 +120,9 @@
             self->name.hidden=YES;
             self->name1.hidden=YES;
         }else{
-        self->name.hidden=NO;
-        self->name1.hidden=NO;
-        } 
+            self->name.hidden=NO;
+            self->name1.hidden=NO;
+        }
     }];
     [[zBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
         self.indexSeleted=0;
@@ -179,11 +179,10 @@
     }];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-kSafeAreaBottomHeight);
+        make.left.bottom.right.mas_equalTo(self.view);
         make.top.mas_equalTo(backView.mas_bottom);
     }];
- 
+    
     UIButton * guiBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     [guiBtn setTitle:@"会员规则说明" forState:0];
     [guiBtn setTitleColor:BassColor(229, 163, 54) forState:0];
@@ -220,27 +219,26 @@
                 self.timeLable.text = [NSString stringWithFormat:@"黄金会员%@到期",responce[@"data"][@"viptime"]];
                 [self.moneyBtn setTitle:[NSString stringWithFormat:@"立即续费"] forState:0];
             }else if ([responce[@"data"][@"level"] intValue]==3){
-              self.timeLable.text = [NSString stringWithFormat:@"钻石会员%@到期",responce[@"data"][@"viptime"]];
+                self.timeLable.text = [NSString stringWithFormat:@"钻石会员%@到期",responce[@"data"][@"viptime"]];
                 [self.moneyBtn setTitle:[NSString stringWithFormat:@"立即续费"] forState:0];
                 self->name.hidden=YES;
                 self->name1.hidden=YES;
             }else{
                 self.timeLable.text = @"未开通";
-                 [self.moneyBtn setTitle:[NSString stringWithFormat:@"立即开通"] forState:0];
+                [self.moneyBtn setTitle:[NSString stringWithFormat:@"立即开通"] forState:0];
             }
-                
+            
             self.dataArr =[VipModel mj_objectArrayWithKeyValuesArray:responce[@"data"][@"vip"]];
             if (self.dataArr.count>0) {
                 VipModel * model = self.dataArr[0];
                 
                 self.vipID = model.vipID;
             }
-           
+            
             [self.collectionView reloadData];
         }else{
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
-        
     } faile:^(NSError * _Nonnull erroe) {
         
     }];
@@ -252,38 +250,40 @@
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.delegate =self;
         _tableView.dataSource =self;
+        _tableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectMake(0.0, 0.0, kScreenWidth, kSafeAreaBottomHeight + height(15.0))];
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     }
     return _tableView;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return 0;
-    
-    
 }
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-   UITableViewCell * cell =[tableView dequeueReusableCellWithIdentifier:@"cell"];
+    UITableViewCell * cell =[tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.backgroundColor =BassColor(255, 255, 255);
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     return height(0);
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return height(680);
-    
+    return height(600);
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.0001;
 }
+
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView * heardView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth,  height(680))];
+    UIView * heardView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth,  height(600))];
     heardView.backgroundColor = UIColor.whiteColor;
     UIImageView * vipImg =[[UIImageView alloc]init];
     vipImg.image =[UIImage imageNamed:@"vipXin"];
@@ -319,7 +319,7 @@
     }];
     self->name.hidden=NO;
     self->name1.hidden=NO;
-
+    
     UIButton * panBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     panBtn.backgroundColor = UIColor.clearColor;
     [heardView addSubview:panBtn];
@@ -360,7 +360,7 @@
     
     SPButton * weiBtn = [[SPButton alloc] initWithImagePosition:SPButtonImagePositionLeft];;
     [weiBtn setTitle:@"微信   " forState:UIControlStateNormal];
-
+    
     weiBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [weiBtn setImage:[UIImage imageNamed:@"weixin"] forState:UIControlStateNormal];
     [weiBtn setTitleColor:BassColor(51,51,51) forState:UIControlStateNormal];
@@ -382,10 +382,11 @@
         make.width.mas_equalTo(17.5);
         make.centerY.mas_equalTo(weiBtn.mas_centerY);
         make.right.mas_equalTo(heardView.mas_right).offset(-10);
+        make.bottom.mas_lessThanOrEqualTo(heardView).inset(height(15));
     }];
-    SPButton * zhiBtn = [[SPButton alloc] initWithImagePosition:SPButtonImagePositionLeft];;
+    SPButton * zhiBtn = [[SPButton alloc] initWithImagePosition:SPButtonImagePositionLeft];
+    [zhiBtn setHidden:YES];
     [zhiBtn setTitle:@"支付宝" forState:UIControlStateNormal];
-    
     zhiBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [zhiBtn setImage:[UIImage imageNamed:@"zhifubaoxin"] forState:UIControlStateNormal];
     [zhiBtn setTitleColor:BassColor(51,51,51) forState:UIControlStateNormal];
@@ -400,6 +401,7 @@
         make.left.mas_equalTo(heardView).offset(10);
     }];
     UIButton * zhiImg =[UIButton buttonWithType:UIButtonTypeCustom];
+    [zhiImg setHidden:YES];
     [zhiImg setImage:[UIImage imageNamed:@"weixin-1"] forState:0];
     [heardView addSubview:zhiImg];
     [zhiImg mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -409,13 +411,12 @@
         make.right.mas_equalTo(heardView.mas_right).offset(-10);
     }];
     [[weiImg rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-         self.index=0;
+        self.index=0;
         [weiImg setImage:[UIImage imageNamed:@"xinxuanz"] forState:0];
-       [zhiImg setImage:[UIImage imageNamed:@"weixin-1"] forState:0];
+        [zhiImg setImage:[UIImage imageNamed:@"weixin-1"] forState:0];
     }];
     [[zhiImg rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
         self.index=1;
-       
         [zhiImg setImage:[UIImage imageNamed:@"xinxuanz"] forState:0];
         [weiImg setImage:[UIImage imageNamed:@"weixin-1"] forState:0];
     }];
@@ -426,7 +427,7 @@
     [line4 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(heardView);
         make.height.mas_equalTo(height(77));
-        make.top.mas_equalTo(zhiBtn.mas_bottom).offset(height(30));
+        make.top.mas_equalTo(weiBtn.mas_bottom).offset(height(30));
     }];
     self.moneyBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     [self.moneyBtn setBackgroundImage:[HttpTool gradientImageWithBounds:CGRectMake(0, 0, kScreenWidth, kScreenHeight) andColors:@[BassColor(253, 234, 201),BassColor(223, 178, 110)] andGradientType:0] forState:0];
@@ -471,11 +472,11 @@
                             [PaymentManager alipayResult:resultStatus];
                         }];
                     } faile:^(NSError * _Nonnull erroe) {
-
+                        
                     }];
                 }
             }else{
-              [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+                [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             }
             
         } faile:^(NSError * _Nonnull erroe) {
@@ -485,15 +486,17 @@
     }];
     return heardView;
 }
+
 - (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView * footView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth,0.0001)];
+    UIView * footView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 0.0001)];
     footView.backgroundColor = BassColor(255, 255, 255);
     return footView;
 }
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-  
 }
+
 -(UICollectionView*)collectionView{
     if (!_collectionView) {
         UICollectionViewFlowLayout * layout =[[UICollectionViewFlowLayout alloc]init];
@@ -522,13 +525,13 @@
     }else if(indexPath.row==0){
         cell.imgBtn.hidden=YES;
     }else{
-       cell.imgBtn.hidden=YES;
+        cell.imgBtn.hidden=YES;
     }
     if (self.indexSeleted==indexPath.row) {
         cell.contentView.layer.borderColor = BassColor(255, 166, 20).CGColor;
-         cell.backgroundColor =BassColor(251, 220, 127);
+        cell.backgroundColor =BassColor(251, 220, 127);
     }else{
-         cell.backgroundColor =[UIColor whiteColor];
+        cell.backgroundColor =[UIColor whiteColor];
     }
     return cell;
 }
@@ -536,7 +539,7 @@
     VipModel * model = self.dataArr[indexPath.row];
     self.indexSeleted = indexPath.row;
     self.vipID = model.vipID;
-//    [self.moneyBtn setTitle:[NSString stringWithFormat:@"立即支付%@元",model.money] forState:0];
+    //    [self.moneyBtn setTitle:[NSString stringWithFormat:@"立即支付%@元",model.money] forState:0];
     [self.collectionView reloadData];
 }
 // 设置cell大小 itemSize：可以给每一个cell指定不同的尺寸
@@ -572,6 +575,7 @@
     NSString *message = [userInfo objectForKey:@"message"];
     [self paymentCallback:result message:message];
 }
+
 /**
  * 处理支付结果
  */
@@ -597,4 +601,5 @@
         return;
     }
 }
+
 @end

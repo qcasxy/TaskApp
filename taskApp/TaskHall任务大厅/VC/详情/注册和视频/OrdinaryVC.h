@@ -7,12 +7,19 @@
 //
 
 #import "BassMianViewController.h"
+#import "TaskInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OrdinaryVC : BassMianViewController
+
+@property(nonatomic,strong)TaskInfoModel *taskModel;
+
 @property(nonatomic,strong)NSDictionary * dataDic;
 @property(nonatomic,assign)int homeIndex;
+
+-(instancetype)initModel:(TaskInfoModel *) model;
+
 @end
 
 NS_ASSUME_NONNULL_END
