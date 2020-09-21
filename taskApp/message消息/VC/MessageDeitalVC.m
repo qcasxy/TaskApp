@@ -75,7 +75,9 @@
         [self.tableView reloadData];
         
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self.tableView.mj_footer endRefreshing];
+        [self.tableView.mj_header endRefreshing];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 -(UITableView*)tableView{

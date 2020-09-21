@@ -216,7 +216,7 @@
 //                self.isYes=YES;
 //            }
 //        } faile:^(NSError * _Nonnull erroe) {
-//
+//        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
 //        }];
 //    }
 //}

@@ -188,10 +188,11 @@
                 webVC.context = responce[@"data"][@"deal"];
                 webVC.hidesBottomBarWhenPushed =YES;
                 [self.navigationController pushViewController:webVC animated:YES];
+            }else {
+                [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             }
-            
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
     }];
     [lognBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -213,6 +214,8 @@
                 webVC.context = responce[@"data"][@"policy"];
                 webVC.hidesBottomBarWhenPushed =YES;
                 [self.navigationController pushViewController:webVC animated:YES];
+            }else {
+                [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             }
             
         } faile:^(NSError * _Nonnull erroe) {
@@ -336,7 +339,7 @@
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        [self showToastInView:self.view message: @"发送失败" duration: 0.8];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 
@@ -344,9 +347,11 @@
     [HttpTool post:API_POST_getDesc dic:@{} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
             self.descLab.text = responce[@"data"][@"content"];
+        }else {
+            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message:@"网络错误！" duration:0.8];
     }];
 }
 
@@ -391,7 +396,7 @@
               [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        [self showToastInView:self.view message:@"登录失败" duration:0.8];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 
@@ -442,7 +447,7 @@
              [self showToastInView:self.view message:self.msg duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        [self showToastInView:self.view message: @"登录失败" duration:0.8];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 

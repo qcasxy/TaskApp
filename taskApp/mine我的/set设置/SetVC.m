@@ -135,7 +135,7 @@
     }else if (indexPath.section==2) {
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         [HttpTool get:API_POST_checkBb dic:@{@"type":@"2", @"bbnum": [NSString stringWithFormat:@"%@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]]} success:^(id  _Nonnull responce) {
-            if ([responce[@"code"] intValue]==200) {
+            if ([responce[@"code"] intValue] == 200) {
                 NSString* urlStr = responce[@"data"];
                 
                 NSURL *url;
@@ -160,9 +160,8 @@
                 [self showToastInView:self.view message:@"已是最新版本" duration:0.8];
             }
         } faile:^(NSError * _Nonnull erroe) {
-            [self showToastInView:self.view message:@"网络错误\n暂时无法更新！" duration:0.8];
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
-        
     }else{
         AboutUsVC * VC =[[AboutUsVC alloc] init];
         VC.hidesBottomBarWhenPushed=YES;

@@ -87,7 +87,7 @@
                         [self showToastInView:self.view message:responce[@"message"] duration:0.8];
                     }
                 } faile:^(NSError * _Nonnull erroe) {
-                    
+                    [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
                 }];
                 
             }else{
@@ -175,7 +175,7 @@
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        [self showToastInView:self.view message:@"网络错误" duration:0.8];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 

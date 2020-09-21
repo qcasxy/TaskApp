@@ -142,7 +142,9 @@
         }
         [self.taskCollection reloadData];
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self.taskCollection.mj_header endRefreshing];
+        [self.taskCollection.mj_footer endRefreshing];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 -(UICollectionView*)taskCollection{
@@ -219,7 +221,7 @@
         }
     } faile:^(NSError * _Nonnull erroe) {
         [self stopDGActView];
-        [self showToastInView:self.view message: @"网络错误" duration:0.8];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 -(void)chuanZhiType:(int)indexType{

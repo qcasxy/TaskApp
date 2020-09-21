@@ -204,9 +204,8 @@
                 webVC.hidesBottomBarWhenPushed =YES;
                 [self.navigationController pushViewController:webVC animated:YES];
             }
-            
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
     }];
 }
@@ -240,7 +239,7 @@
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 -(UITableView*)tableView{
@@ -338,7 +337,7 @@
                 [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             }
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
     }];
     UIView * line3 =[[UIView alloc]init];
@@ -462,7 +461,7 @@
                             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
                         }
                     } faile:^(NSError * _Nonnull erroe) {
-                        
+                        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
                     }];
                 }else{//支付宝
                     [HttpTool post:API_POST_echargeVip dic:@{@"type":@"1",@"id":self.vipID} success:^(id  _Nonnull responce) {
@@ -472,15 +471,14 @@
                             [PaymentManager alipayResult:resultStatus];
                         }];
                     } faile:^(NSError * _Nonnull erroe) {
-                        
+                        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
                     }];
                 }
             }else{
                 [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             }
-            
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
         
     }];

@@ -238,7 +238,7 @@
         request.sign= responce[@"signType"];
         [WXApi sendReq:request];
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
     if (![_dataArr containsObject:[self.dateFormatter stringFromDate:[NSDate date]]]) {
         [_dataArr addObject:[self.dateFormatter stringFromDate:[NSDate date]]];

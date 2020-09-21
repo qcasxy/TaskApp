@@ -2142,7 +2142,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.3;
+				CURRENT_PROJECT_VERSION = 1.0.4;
 				DEVELOPMENT_TEAM = 58UGPVH5XU;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2165,7 +2165,7 @@
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/WeChat",
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/QQ",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2248,7 +2248,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.3;
+				CURRENT_PROJECT_VERSION = 1.0.4;
 				DEVELOPMENT_TEAM = 58UGPVH5XU;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2271,7 +2271,7 @@
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/WeChat",
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/QQ",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

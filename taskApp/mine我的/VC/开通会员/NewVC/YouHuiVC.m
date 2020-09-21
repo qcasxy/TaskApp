@@ -225,7 +225,7 @@
                 [WXApi sendReq:request];
                 
             } faile:^(NSError * _Nonnull erroe) {
-                
+                [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
             }];
         }else{
             
@@ -243,7 +243,7 @@
 //            [self.moneyBtn setTitle:[NSString stringWithFormat:@"立即支付%@元",responce[@"data"][@"money"]] forState:0];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
     // Do any additional setup after loading the view.
 }

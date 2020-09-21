@@ -117,7 +117,7 @@
     } faile:^(NSError * _Nonnull erroe) {
         [self stopDGActView];
         [self.view hideAllToasts];
-        [self.view makeToast: @"网络错误" duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+        [self.view makeToast: @"连接超时，请检查您的网络！" duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
             [self.navigationController popViewControllerAnimated:true];
         }];
     }];

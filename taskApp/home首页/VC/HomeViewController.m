@@ -68,7 +68,7 @@
             [self showToastInView:self.view message:responce[@"msg"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 
@@ -96,7 +96,8 @@
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
     } faile:^(NSError * _Nonnull erroe) {
-        [self showToastInView:self.view message: @"网络错误\n请稍后下拉刷新页面" duration:0.8];
+        [self.homenCollection.mj_header endRefreshing];
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 
@@ -222,7 +223,7 @@
     ////                }
     ////
     ////            } faile:^(NSError * _Nonnull erroe) {
-    ////
+    ////        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     ////            }];
     //            [self showToastInView:self.view message:@"暂未开放" duration:0.8];
     //
@@ -258,7 +259,7 @@
             }
         } faile:^(NSError * _Nonnull erroe) {
             [self stopDGActView];
-            [self showToastInView:self.view message: @"网络错误，暂时无法查看" duration:0.8];
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
     }
 }

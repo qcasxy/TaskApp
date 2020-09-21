@@ -37,10 +37,44 @@
         UINavigationController * navVC =[[UINavigationController alloc]initWithRootViewController:VC];
         self.window.rootViewController = navVC;
     }
+    
+    [self checkVersion];
+    
     return YES;
 }
-- (void)configUSharePlatforms
-{
+
+- (void)checkVersion {
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    [HttpTool get:API_POST_checkBb dic:@{@"type":@"2", @"bbnum": [NSString stringWithFormat:@"%@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]]} success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue] == 200) {
+            NSString* urlStr = responce[@"data"];
+            
+            NSURL *url;
+            
+            if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString: urlStr]]) {
+                url = [NSURL URLWithString: urlStr];
+            }else if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]]]) {
+                url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", urlStr]];
+            }
+            if (url != nil) {
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"是否更新" message:@"发现新的版本" preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"是", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [[UIApplication  sharedApplication] openURL:url];
+                }]];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"否" style:UIAlertActionStyleCancel handler:nil]];
+                
+                UIViewController *vc = [UIApplication sharedApplication].windows.lastObject.rootViewController;
+                if (vc != nil) {
+                    [vc presentViewController:alertController animated:YES completion:nil];
+                }
+            }
+        }
+    } faile:^(NSError * _Nonnull erroe) {
+        
+    }];
+}
+
+- (void)configUSharePlatforms {
     /* 设置微信的appKey和appSecret */
     [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:WECHAT_APP_ID appSecret:WECHAT_APP_SECRET redirectURL:@"http://mobile.umeng.com/social"];
         [UMSocialUIManager setPreDefinePlatforms:@[@(UMSocialPlatformType_WechatSession),@(UMSocialPlatformType_WechatTimeLine)]];

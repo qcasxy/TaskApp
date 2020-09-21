@@ -9,6 +9,7 @@
 #import "TaskBtnView.h"
 #import "HNPopMenuManager.h"
 #import "HNPopMenuModel.h"
+#import "BassMianViewController.h"
 @interface TaskBtnView ()<HNPopMenuViewDelegate>
 @property(nonatomic,strong)NSMutableArray * dataArr;
 @property(nonatomic,strong)UIButton * leiBtn;
@@ -31,7 +32,13 @@
             }
             
         } faile:^(NSError * _Nonnull erroe) {
-            
+            UIViewController *tempVC = self.viewContainingController;
+            if (tempVC != nil && [tempVC isKindOfClass: [BassMianViewController class]]) {
+                BassMianViewController *vc = (BassMianViewController *)tempVC;
+                if (vc != nil) {
+                    [vc showToastInView:vc.view message: @"连接超时，请检查您的网络！" duration:0.8];
+                }
+            }
         }];
 //        self.dataArr =[ mj_objectArrayWithKeyValuesArray:@[@{@"name":@"下载任务 ",@"id":@"1"},@{@"name":@"注册任务",@"id":@"2"},@{@"name":@"视频任务",@"id":@"3"}]];
         self.leiBtn =[UIButton buttonWithType:UIButtonTypeCustom];

@@ -120,9 +120,8 @@
                 webVC.hidesBottomBarWhenPushed =YES;
                 [self.navigationController pushViewController:webVC animated:YES];
             }
-            
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
     }];
     UILabel * comtLable =[HttpTool createLable:BassColor(133, 99, 62) font:VPFont(@"PingFangSC-Regular", height(13)) textAlignmen:NSTextAlignmentLeft text:@"开通V I P·尊享各大特权"];
@@ -251,11 +250,8 @@
                 [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             }
         } faile:^(NSError * _Nonnull erroe) {
-            
+            [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
-        
-        
-       
     }];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -275,7 +271,7 @@
             
         }
     } faile:^(NSError * _Nonnull erroe) {
-        
+                [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
 /*
