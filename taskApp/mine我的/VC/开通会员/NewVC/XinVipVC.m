@@ -154,7 +154,7 @@
         make.left.mas_equalTo(touImg.mas_right).offset(width(15));
         make.centerY.mas_equalTo(touImg.mas_centerY).offset(-height(15));
         make.height.mas_equalTo(height(18));
-        make.width.mas_equalTo(width(5)+wid);
+//        make.width.mas_equalTo(width(5)+wid);
     }];
     UIImageView * vimg=[[UIImageView alloc]init];
     vimg.image =[UIImage imageNamed:@"huiyan"];

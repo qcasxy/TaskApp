@@ -23,7 +23,7 @@
             make.centerX.mas_equalTo(self.mas_centerX);
             make.centerY.mas_equalTo(self.mas_centerY).offset(height(30));
             make.right.left.mas_equalTo(self);
-             make.height.mas_equalTo(20);
+//             make.height.mas_equalTo(20);
         }];
         self.nameLable =[HttpTool createLable:BassColor(51, 51, 51) font:VPFont(@"PingFangSC-Regular", height(16)) textAlignmen:NSTextAlignmentCenter text:@"1个月"];
         
