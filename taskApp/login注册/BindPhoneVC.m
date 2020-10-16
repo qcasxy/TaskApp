@@ -77,7 +77,7 @@
         make.width.mas_equalTo(width(100));
         make.height.mas_equalTo(height(16));
     }];
-    self.yanField=[HttpTool createField:@"非邀请用户请输入20001" font:VPFont(@"PingFang-SC-Medium",height(15)) color:BassColor(51,51,51) ishidden:NO];
+    self.yanField=[HttpTool createField:@"请输入邀请码（选填）" font:VPFont(@"PingFang-SC-Medium",height(15)) color:BassColor(51,51,51) ishidden:NO];
   //  self.yanField.keyboardType=UIKeyboardTypePhonePad;
 //    NSString *holderText = @"请输入邀请码";
 //    NSMutableAttributedString *placeholder = [[NSMutableAttributedString alloc] initWithString:holderText];
@@ -171,10 +171,10 @@
         [self showToastInView:self.view message:checkPhone duration:0.8];
         return;
     }
-    if (self.yanField.text.length==0) {
-        [self showToastInView:self.view message:@"请输入邀请码" duration:0.8];
-        return;
-    }
+//    if (self.yanField.text.length==0) {
+//        [self showToastInView:self.view message:@"请输入邀请码" duration:0.8];
+//        return;
+//    }
 
     [HttpTool noHeardsPost:API_POST_register dic:@{@"openid":self.resp.openid,@"nickname":self.resp.name,@"headimg":self.resp.iconurl,@"phone":self.phoneField.text,@"invite":self.yanField.text} success:^(id  _Nonnull responce) {
       

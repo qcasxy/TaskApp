@@ -29,14 +29,14 @@
         self.dataArr=[MineModel mj_objectArrayWithKeyValuesArray:@[@{@"name":@"我的接单",@"img":@"hx_danzi"},@{@"name":@"待提交",@"img":@"shangchuanicon"},@{@"name":@"审核中",@"img":@"shenhezhong"},@{@"name":@"不合格",@"img":@"buhege"},@{@"name":@"已完成",@"img":@"yiwancheng"}]];
         UIImageView* backView =[[UIImageView alloc]init];
         backView.image =[UIImage imageNamed:@"minetop"];
-        [self addSubview:backView];
+        [self.contentView addSubview:backView];
         [backView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self);
             make.top.mas_equalTo(self);
             make.height.mas_equalTo(height(285));
         }];
         self.titleLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(21)) textAlignmen:NSTextAlignmentLeft text:@"个人中心"];
-        [self addSubview:self.titleLable];
+        [self.contentView addSubview:self.titleLable];
         [self.titleLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(width(19));
             make.top.mas_equalTo(self).offset(height(55.5));
@@ -45,7 +45,7 @@
         }];
         self.touImg =[[UIImageView alloc]init];
         self.touImg.image =[UIImage imageNamed:@""];
-        [self addSubview:self.touImg];
+        [self.contentView addSubview:self.touImg];
         [self.touImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(width(19));
             make.top.mas_equalTo(self.titleLable.mas_bottom).offset(height(27));
@@ -56,7 +56,7 @@
         
         self.nameLable = [HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(16)) textAlignmen:NSTextAlignmentLeft text:@""];
         self.nameLable.numberOfLines = 0;
-        [self addSubview:self.nameLable];
+        [self.contentView addSubview:self.nameLable];
         [self.nameLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.touImg.mas_right).offset(width(10));
             make.centerY.mas_equalTo(self.touImg.mas_centerY).offset(height(-15));
@@ -64,7 +64,7 @@
         }];
        
         self.IDLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(13)) textAlignmen:NSTextAlignmentLeft text:@"ID："];
-        [self addSubview:self.IDLable];
+        [self.contentView addSubview:self.IDLable];
         [self.IDLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.touImg.mas_right).offset(width(10));
             make.top.mas_greaterThanOrEqualTo(self.nameLable.mas_bottom).offset(height(5.0));
@@ -75,7 +75,7 @@
         
         self.leveImg =[[UIImageView alloc]init];
         self.leveImg.image =[UIImage imageNamed:@"VipImg-1"];
-        [self addSubview:self.leveImg];
+        [self.contentView addSubview:self.leveImg];
         [self.leveImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.nameLable.mas_centerY);
             make.height.mas_equalTo(height(13));
@@ -86,7 +86,7 @@
         
         self.leveLable=[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Semibold", height(13)) textAlignmen:NSTextAlignmentCenter text:@""];
         self.leveLable.adjustsFontSizeToFitWidth = YES;
-        [self addSubview:self.leveLable];
+        [self.contentView addSubview:self.leveLable];
         [self.leveLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.leveImg);
         }];
@@ -94,7 +94,7 @@
         self.rightImg=[[UIImageView alloc]init];
         self.rightImg.backgroundColor =UIColor.clearColor;
         self.rightImg.image =[UIImage imageNamed:@"jinru"];
-        [self addSubview:self.rightImg];
+        [self.contentView addSubview:self.rightImg];
         [self.rightImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self.mas_right).offset(-width(15));
             make.centerY.mas_equalTo(self.touImg.mas_centerY);
@@ -102,7 +102,7 @@
             make.height.mas_equalTo(height(13));
         }];
         UILabel * ziLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"PingFangSC-Medium", height(13)) textAlignmen:NSTextAlignmentLeft text:@"我的资产"];
-        [self addSubview:ziLable];
+        [self.contentView addSubview:ziLable];
         [ziLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(width(19));
             make.height.mas_equalTo(height(13));
@@ -111,7 +111,7 @@
         }];
         self.moneyLable =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"DIN-Medium", height(28)) textAlignmen:NSTextAlignmentLeft text:@""];
         self.moneyLable.font = [UIFont systemFontOfSize:16];
-        [self addSubview:self.moneyLable];
+        [self.contentView addSubview:self.moneyLable];
         [self.moneyLable mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(width(44));
             make.top.mas_equalTo(ziLable).offset(height(14.5));
@@ -120,7 +120,7 @@
         }];
         self.moneyLable1 =[HttpTool createLable:UIColor.whiteColor font:VPFont(@"DIN-Medium", height(28)) textAlignmen:NSTextAlignmentRight text:@""];
       self.moneyLable1.font = [UIFont systemFontOfSize:16];
-        [self addSubview:self.moneyLable1];
+        [self.contentView addSubview:self.moneyLable1];
         [self.moneyLable1 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self.mas_right).offset(-width(44));
             make.top.mas_equalTo(ziLable).offset(height(14.5));
@@ -129,7 +129,7 @@
         }];
         UIView * senView=[[UIView alloc]init];
         senView.backgroundColor =[UIColor whiteColor];
-        [self addSubview:senView];
+        [self.contentView addSubview:senView];
         [senView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.mas_centerX);
             make.width.mas_equalTo(width(350));
@@ -145,7 +145,7 @@
         }];
         UIButton * btn =[UIButton buttonWithType:UIButtonTypeCustom];
         btn.backgroundColor =[UIColor clearColor];
-        [self addSubview:btn];
+        [self.contentView addSubview:btn];
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.touImg.mas_centerY);
             make.left.right.mas_equalTo(self);

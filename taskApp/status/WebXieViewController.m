@@ -57,14 +57,15 @@
     
     // Do any additional setup after loading the view.
 }
+
 -(void)goToBack{
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 -(void)load_xiang_wenZhang{
-    
-            [self.webView loadHTMLString:self.context baseURL:nil];
-    
+    [self.webView loadHTMLString:self.context baseURL:nil];
 }
+
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     //改变背景颜色
     [webView stringByEvaluatingJavaScriptFromString:@"document.body.style.backgroundColor = '#ffffff'"];

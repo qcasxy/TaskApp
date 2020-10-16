@@ -111,7 +111,7 @@
 
     /// 支付宝
     UIView  *croveView1 = [[UIView alloc]init];
-    [croveView1 setHidden:YES];
+//    [croveView1 setHidden:YES];
     [self.view addSubview:croveView1];
     [croveView1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
@@ -201,12 +201,12 @@
     UIView  *croveView3 = [[UIView alloc]init];
     [self.view addSubview:croveView3];
     [croveView3 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.view);
-        make.top.equalTo(xuanlable.mas_bottom).offset(20);
-        make.height.mas_equalTo(45);
 //        make.left.right.equalTo(self.view);
-//        make.top.equalTo(self.croveView2.mas_bottom);
+//        make.top.equalTo(xuanlable.mas_bottom).offset(20);
 //        make.height.mas_equalTo(45);
+        make.left.right.equalTo(self.view);
+        make.top.equalTo(self.croveView2.mas_bottom);
+        make.height.mas_equalTo(45);
     }];
     UIButton *weiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [weiBtn setTitle:@"微信" forState:0];

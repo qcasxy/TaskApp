@@ -274,7 +274,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return height(600);
+    return height(680);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
@@ -282,7 +282,7 @@
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView * heardView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth,  height(600))];
+    UIView * heardView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth,  height(680))];
     heardView.backgroundColor = UIColor.whiteColor;
     UIImageView * vipImg =[[UIImageView alloc]init];
     vipImg.image =[UIImage imageNamed:@"vipXin"];
@@ -384,7 +384,7 @@
         make.bottom.mas_lessThanOrEqualTo(heardView).inset(height(15));
     }];
     SPButton * zhiBtn = [[SPButton alloc] initWithImagePosition:SPButtonImagePositionLeft];
-    [zhiBtn setHidden:YES];
+//    [zhiBtn setHidden:YES];
     [zhiBtn setTitle:@"支付宝" forState:UIControlStateNormal];
     zhiBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [zhiBtn setImage:[UIImage imageNamed:@"zhifubaoxin"] forState:UIControlStateNormal];
@@ -400,7 +400,7 @@
         make.left.mas_equalTo(heardView).offset(10);
     }];
     UIButton * zhiImg =[UIButton buttonWithType:UIButtonTypeCustom];
-    [zhiImg setHidden:YES];
+//    [zhiImg setHidden:YES];
     [zhiImg setImage:[UIImage imageNamed:@"weixin-1"] forState:0];
     [heardView addSubview:zhiImg];
     [zhiImg mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -426,7 +426,7 @@
     [line4 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(heardView);
         make.height.mas_equalTo(height(77));
-        make.top.mas_equalTo(weiBtn.mas_bottom).offset(height(30));
+        make.top.mas_equalTo(zhiBtn.mas_bottom).offset(height(30));
     }];
     self.moneyBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     [self.moneyBtn setBackgroundImage:[HttpTool gradientImageWithBounds:CGRectMake(0, 0, kScreenWidth, kScreenHeight) andColors:@[BassColor(253, 234, 201),BassColor(223, 178, 110)] andGradientType:0] forState:0];
