@@ -305,24 +305,22 @@
             NSString *str = [formatter stringFromDate:[NSDate date]];
             NSLog(@"222222%@",str);
             [formData appendPartWithFileData:imageData name:name fileName:[NSString stringWithFormat:@"%@.jpg",str] mimeType:@"image/jpg/file"];
-            
         }
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary * resultDic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        if ([resultDic[@"code"] intValue]==200) {
-            
+        if ([resultDic[@"code"] intValue] == 200) {
             [self showToastInView:self.view message:resultDic[@"msg"] duration:0.8];
             SuccessViewController *VC =[[SuccessViewController alloc]init];
             VC.imgName = @"success";
             VC.status = @"审核中";
             VC.beiZhu = @"审核中，后台正在审核请耐心等待，感谢配合～";
             VC.btnStr = @"确定";
-            if (self.indx==100) {
-                VC.indexType=4;
-            }else if (self.indx==101) {
-              VC.indexType=3;
+            if (self.indx == 100) {
+                VC.indexType = 4;
+            }else if (self.indx == 101) {
+                VC.indexType = 3;
             }else {
-            VC.indexType=5;
+                VC.indexType = 5;
             }
             [self.navigationController pushViewController:VC animated:YES];
         }else{

@@ -18,7 +18,8 @@
 #define NICKIMG [[NSUserDefaults standardUserDefaults] objectForKey:@"img"]
 #define ISLOGIN [[NSUserDefaults standardUserDefaults] objectForKey:@"isLogin"]
 #define cloud_token [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud_token"]
-#define OPENID [[NSUserDefaults standardUserDefaults] objectForKey:@"openid"]
+#define OPENID [[NSUserDefaults standardUserDefaults] stringForKey:@"openid"]
+#define USERID [[NSUserDefaults standardUserDefaults] stringForKey:@"userid"]
 #define kLatitude @"latitudeString"//纬度
 #define kLongitude @"longitudeString"//经度
 /** 16进制颜色  0x...... */

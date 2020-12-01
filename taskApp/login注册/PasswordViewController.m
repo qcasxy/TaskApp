@@ -198,7 +198,7 @@
         return;
     }
 
-    NSString *userId = [[NSUserDefaults standardUserDefaults] stringForKey:@"userid"];
+    NSString *userId = USERID;
     if (!_isForget && [StringUtils isNullOrEmpty:userId]) {
         [self showToastInView:self.view message: @"暂时无法修改密码，请重新登录后再试" duration:0.8];
         return;

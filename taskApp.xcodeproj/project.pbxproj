@@ -2165,7 +2165,7 @@
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/WeChat",
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/QQ",
 				);
-				MARKETING_VERSION = 26;
+				MARKETING_VERSION = 31;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2271,7 +2271,7 @@
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/WeChat",
 					"$(PROJECT_DIR)/taskApp/ThirdParty/UMSocial/share/share_ios_6.9.9/SocialLibraries/QQ",
 				);
-				MARKETING_VERSION = 26;
+				MARKETING_VERSION = 31;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

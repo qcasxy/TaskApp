@@ -27,6 +27,9 @@
     _webView = [[WKWebView alloc] initWithFrame: self.view.bounds];
     [_webView loadHTMLString:_context baseURL:nil];
     [self.view addSubview:_webView];
+    [_webView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
     
     if (@available(iOS 11.0, *)) {
         
@@ -36,9 +39,7 @@
         
         _webView.scrollView.scrollIndicatorInsets = _webView.scrollView.contentInset;
         
-    }
-    else
-    {
+    }else {
         self.automaticallyAdjustsScrollViewInsets=NO;
     }
 }

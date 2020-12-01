@@ -60,12 +60,8 @@
         make.bottom.mas_equalTo(self.view.mas_bottom).offset(-height(34.0) - kSafeAreaBottomHeight);
     }];
     [[sureBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-       if ([self.dataDic[@"status"] intValue]==1) {
-           UploadScreenshotsVC * VC = [[UploadScreenshotsVC alloc] initModel:self.taskModel];
-            VC.hidesBottomBarWhenPushed=YES;
-            VC.nameStr = self.dataDic[@"title"];
-            VC.orderid = self.dataDic[@"id"];
-            [self.navigationController pushViewController:VC animated:YES];
+        if ([self.dataDic[@"status"] intValue]==1) {
+            [self uploadScreenshots];
         }else if ([self.dataDic[@"status"] intValue]==2) {
             [self showToastInView:self.view message:@"正在审核" duration:0.8];
             return ;
@@ -73,15 +69,17 @@
             [self showToastInView:self.view message:@"已完成" duration:0.8];
             return ;
         }else{
-            UploadScreenshotsVC * VC =[[UploadScreenshotsVC alloc] initModel: self.taskModel];
-            VC.hidesBottomBarWhenPushed=YES;
-            VC.nameStr = self.dataDic[@"title"];
-            VC.orderid = self.dataDic[@"id"];
-            VC.indx=100;
-            [self.navigationController pushViewController:VC animated:YES];
-            
+            [self uploadScreenshots];
         }
     }];
+}
+
+-(void)uploadScreenshots {
+    UploadScreenshotsVC * VC = [[UploadScreenshotsVC alloc] initModel:self.taskModel];
+    VC.hidesBottomBarWhenPushed = YES;
+    VC.nameStr = self.dataDic[@"title"];
+    VC.orderid = self.dataDic[@"id"];
+    [self.navigationController pushViewController:VC animated:YES];
 }
 
 - (void)setDataDic:(NSDictionary *)dataDic {

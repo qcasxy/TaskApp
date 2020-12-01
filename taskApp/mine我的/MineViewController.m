@@ -171,7 +171,6 @@
             WalletVC * VC =[[WalletVC alloc]init];
             VC.hidesBottomBarWhenPushed =YES;
             [self.navigationController pushViewController:VC animated:YES];
-          
         }else if (indexPath.row==2){
             XinVipVC * VC =[[XinVipVC alloc]init];
             VC.mmodel = self.cellModel;

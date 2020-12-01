@@ -7,85 +7,64 @@
 //
 
 #import "WebXieViewController.h"
+#import <WebKit/WebKit.h>
 
-@interface WebXieViewController ()<UIWebViewDelegate>
-@property (nonatomic , weak) UIWebView *webView;
+@interface WebXieViewController ()<WKNavigationDelegate>
+@property (nonatomic, strong) WKWebView *wkWeb;
 @end
 
 @implementation WebXieViewController
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setNavTitle:self.name];
     self.view.backgroundColor =BassColor(241, 241, 241);
     [self setLeftButton:@"" imgStr:@"2fanhui" selector:@selector(goToBack)];
-    // 正文
-    UIWebView *webView = [[UIWebView alloc] init];
-    if ([self.name isEqualToString:@"用户协议"]) {
-        webView.frame = CGRectMake(0, NavHeight,kScreenWidth , kScreenHeight-NavHeight);
-    }else{
-        webView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight-NavHeight );
-    }
     
-    webView.delegate = self;
-    webView.scrollView.scrollEnabled = YES;
-    [self.view addSubview:webView];
-    _webView = webView;
+    NSString *jScript = @"var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);";
     
-    [_webView stringByEvaluatingJavaScriptFromString:@"document.body.style.backgroundColor = '#ffffff'"];
+    WKUserScript *wkUScript = [[WKUserScript alloc] initWithSource:jScript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+    WKUserContentController *wkUController = [[WKUserContentController alloc] init];
+    [wkUController addUserScript:wkUScript];
     
+    WKWebViewConfiguration *wkWebConfig = [[WKWebViewConfiguration alloc] init];
+    wkWebConfig.userContentController = wkUController;
     
-    _webView.backgroundColor=UIColor.whiteColor;
+    _wkWeb = [[WKWebView alloc] initWithFrame: CGRectZero configuration:wkWebConfig];
+    self.wkWeb.navigationDelegate = self;
+    self.wkWeb.scrollView.scrollEnabled = YES;
+    self.wkWeb.backgroundColor = UIColor.whiteColor;
+    self.wkWeb.opaque = false;
+    [self.view addSubview:self.wkWeb];
+    [self.wkWeb loadHTMLString:self.context baseURL:nil];
+    [self.wkWeb mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
     
-    [_webView setOpaque:FALSE];
-    
-    if (@available(iOS 11.0, *)) {
-        
-        _webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        
-        _webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        
-        _webView.scrollView.scrollIndicatorInsets = _webView.scrollView.contentInset;
-        
-    }
-    else
-    {
-        self.automaticallyAdjustsScrollViewInsets=NO;
-    }
-    [self load_xiang_wenZhang];
-    
-    // Do any additional setup after loading the view.
+//    if (@available(iOS 11.0, *)) {
+//        _wkWeb.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+//        //        _wkWeb.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+//        //        _wkWeb.scrollView.scrollIndicatorInsets = _wkWeb.scrollView.contentInset;
+//    }else {
+//        self.automaticallyAdjustsScrollViewInsets = NO;
+//    }
 }
 
 -(void)goToBack{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)load_xiang_wenZhang{
-    [self.webView loadHTMLString:self.context baseURL:nil];
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     //改变背景颜色
-    [webView stringByEvaluatingJavaScriptFromString:@"document.body.style.backgroundColor = '#ffffff'"];
+    [webView evaluateJavaScript:@"document.body.style.backgroundColor = '#ffffff'" completionHandler: nil];
     //改变字体颜色
-    [webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('body')[0].style.webkitTextFillColor= '#000000'"];
-     [webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust= '100%'"];
+    [webView evaluateJavaScript:@"document.getElementsByTagName('body')[0].style.webkitTextFillColor= '#000000'" completionHandler: nil];
+    [webView evaluateJavaScript:@"document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust= '100%'" completionHandler: nil];
     NSString *js = @"function imgAutoFit() { var imgs = document.getElementsByTagName('img');document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust= '100%';for (var i = 0; i < imgs.length; i++) {var img = imgs[i];img.style.width = %f;}}";
     
     js = [NSString stringWithFormat:js, kScreenWidth - 20];
-    [webView stringByEvaluatingJavaScriptFromString:js];
-    [webView stringByEvaluatingJavaScriptFromString:@"imgAutoFit()"];
+    [webView evaluateJavaScript:js completionHandler: nil];
+    [webView evaluateJavaScript:@"imgAutoFit()" completionHandler: nil];
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -18,46 +18,54 @@
 @end
 
 @implementation SuccessViewController
--(void)clickBtn{
-    if (self.indexType==1) {
+
+-(void)clickBtn {
+    if (self.indexType == 1) {
         for (UIViewController *controller in self.navigationController.viewControllers) {
             if ([controller isKindOfClass:[LoginViewController class]]) {
                 [self.navigationController popToViewController:controller animated:YES];
+                return;
             }
         }
-    }else if(self.indexType==2){
+    }else if(self.indexType == 2) {
         for (UIViewController *controller in self.navigationController.viewControllers) {
             if ([controller isKindOfClass:[MineViewController class]]) {
                 [self.navigationController popToViewController:controller animated:YES];
+                return;
             }
         }
-    }else if(self.indexType==3){
+    }else if(self.indexType == 3) {
         for (UIViewController *controller in self.navigationController.viewControllers) {
             if ([controller isKindOfClass:[TaskViewController class]]) {
                 [self.navigationController popToViewController:controller animated:YES];
+                return;
             }
         }
-    }else if(self.indexType==4){
+    }else if(self.indexType == 4) {
         for (UIViewController *controller in self.navigationController.viewControllers) {
             if ([controller isKindOfClass:[OrderVC class]]) {
                 [self.navigationController popToViewController:controller animated:YES];
+                return;
             }
         }
-    }else if(self.indexType==5){
+    }else if(self.indexType == 5) {
         for (UIViewController *controller in self.navigationController.viewControllers) {
             if ([controller isKindOfClass:[HomeViewController class]]) {
                 [self.navigationController popToViewController:controller animated:YES];
+                return;
             }
         }
-    }else if(self.indexType==6){
+    }else if(self.indexType == 6) {
         for (UIViewController *controller in self.navigationController.viewControllers) {
             if ([controller isKindOfClass:[XinVipVC class]]) {
                 [self.navigationController popToViewController:controller animated:YES];
+                return;
             }
         }
     }
-   
+    [self.navigationController popToRootViewControllerAnimated: YES];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor whiteColor];
@@ -102,43 +110,7 @@
         make.top.mas_equalTo(beiLabel.mas_bottom).offset(height(60));
     }];
     [[sureBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-        if (self.indexType==1) {
-            for (UIViewController *controller in self.navigationController.viewControllers) {
-                if ([controller isKindOfClass:[LoginViewController class]]) {
-                    [self.navigationController popToViewController:controller animated:YES];
-                }
-            }
-        }else if(self.indexType==2){
-            for (UIViewController *controller in self.navigationController.viewControllers) {
-                if ([controller isKindOfClass:[MineViewController class]]) {
-                    [self.navigationController popToViewController:controller animated:YES];
-                }
-            }
-        }else if(self.indexType==3){
-            for (UIViewController *controller in self.navigationController.viewControllers) {
-                if ([controller isKindOfClass:[TaskViewController class]]) {
-                    [self.navigationController popToViewController:controller animated:YES];
-                }
-            }
-        }else if(self.indexType==4){
-            for (UIViewController *controller in self.navigationController.viewControllers) {
-                if ([controller isKindOfClass:[OrderVC class]]) {
-                    [self.navigationController popToViewController:controller animated:YES];
-                }
-            }
-        }else if(self.indexType==5){
-            for (UIViewController *controller in self.navigationController.viewControllers) {
-                if ([controller isKindOfClass:[HomeViewController class]]) {
-                    [self.navigationController popToViewController:controller animated:YES];
-                }
-            }
-        }else if(self.indexType==6){
-            for (UIViewController *controller in self.navigationController.viewControllers) {
-                if ([controller isKindOfClass:[XinVipVC class]]) {
-                    [self.navigationController popToViewController:controller animated:YES];
-                }
-            }
-        }
+        [self clickBtn];
     }];
 }
 

@@ -55,7 +55,7 @@
         [self.tableView.mj_footer endRefreshing];
         [self.tableView.mj_header endRefreshing];
         if ([responce[@"code"] intValue]==200) {
-           
+            
             if (isYes==YES) {
                 [self.lableArr removeAllObjects];
                 
@@ -90,6 +90,7 @@
         [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
     }];
 }
+
 -(UITableView*)tableView{
     if (!_tableView) {
         _tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight-NavHeight-height(40)) style:UITableViewStyleGrouped];
@@ -98,40 +99,44 @@
         _tableView.delegate =self;
         _tableView.dataSource =self;
         [_tableView registerClass:[OrderCell class] forCellReuseIdentifier:@"OrderCell"];
-       
+        
     }
     return _tableView;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-        return 1;
-    
+    return 1;
 }
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return self.listArr.count;
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-        OrderCell * cell =[tableView dequeueReusableCellWithIdentifier:@"OrderCell"];
-        cell.backgroundColor=UIColor.whiteColor;
+    OrderCell * cell =[tableView dequeueReusableCellWithIdentifier:@"OrderCell"];
+    cell.backgroundColor=UIColor.whiteColor;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     ListModel * model =self.listArr[indexPath.section];
     [cell chuanZhiListModel:model modelArr:self.lableArr[indexPath.section]];
     cell.numLable.text =[NSString stringWithFormat:@"%ld",indexPath.section+1];
-        return cell;
-    
+    return cell;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-   
     return height(79);
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (section==0) {
         return height(10);
     }
     return 1;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.0001;
 }
+
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView * heardView =[[UIView alloc]init];
     if (section==0) {
@@ -142,13 +147,14 @@
     heardView.backgroundColor = BassColor(241, 241, 241);
     return heardView;
 }
+
 - (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     UIView * footView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 0.0001)];
     footView.backgroundColor = BassColor(241, 241, 241);
     return footView;
 }
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     ListModel * model =self.listArr[indexPath.section];
     [HttpTool get:API_POST_taskDetails dic:@{@"id":model.listID} success:^(id  _Nonnull responce) {
         NSLog(@"12%@",responce);

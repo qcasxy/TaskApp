@@ -9,6 +9,9 @@
 
 #import "TiXianViewController.h"
 #import "UIButton+LXMImagePosition.h"
+#import <UMShare/UMShare.h>
+#import "UIView+Toast.h"
+
 @interface TiXianViewController ()
 @property(nonatomic,strong)UITextField * moneyField;
 @property(nonatomic,strong)UILabel * moneyLable;
@@ -262,6 +265,7 @@
     tiBtn.layer.cornerRadius = height(17);
     [tiBtn addTarget:self action:@selector(clickLoginBtn) forControlEvents:UIControlEventTouchUpInside];
 }
+
 -(void)clickLoginBtn{
     if (self.moneyField.text.length==0) {
         [self showToastInView:self.view message:@"请输入金额" duration:0.8];
@@ -275,30 +279,77 @@
         if (self.aliAccount.length == 0) {//绑定支付宝
             [self bindAliAccount];
         }else{
-            [HttpTool post:API_POST_withdraw dic:@{@"type":self.type,@"price":self.moneyField.text} success:^(id  _Nonnull responce) {
-                if ([responce[@"code"] intValue]==200) {
-                    [self showToastInView:self.view message:responce[@"message"] duration:0.8];
-                    [self.navigationController popViewControllerAnimated:YES];
-                }else{
-                   [self showToastInView:self.view message:responce[@"message"] duration:0.8];
-
-                }
-            } faile:^(NSError * _Nonnull erroe) {
-                [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
-            }];
+            [self requestInfo];
         }
     }else{//微信
-        [HttpTool post:API_POST_withdraw dic:@{@"type":self.type,@"price":self.moneyField.text} success:^(id  _Nonnull responce) {
+        if (OPENID == nil || OPENID.length <= 0) {
+            [self getWechatOpenId];
+        }else {
+            [self requestInfo];
+        }
+    }
+}
+
+- (void)getWechatOpenId {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UMSocialManager defaultManager] getUserInfoWithPlatform:UMSocialPlatformType_WechatSession currentViewController:nil completion:^(id result, NSError *error) {
+            if (error) {
+                [self.view makeToast: @"获取微信认证信息失败\n请再试～" duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+                    
+                }];
+            } else {
+                UMSocialUserInfoResponse *resultInfo = result;
+                [self bindOpenId: resultInfo.openid];
+                
+                // 授权信息
+                NSLog(@"Wechat uid: %@", resultInfo.uid);
+                NSLog(@"Wechat openid: %@", resultInfo.openid);
+                NSLog(@"Wechat unionid: %@", resultInfo.unionId);
+                NSLog(@"Wechat accessToken: %@", resultInfo.accessToken);
+                NSLog(@"Wechat refreshToken: %@", resultInfo.refreshToken);
+                NSLog(@"Wechat expiration: %@", resultInfo.expiration);
+                
+                // 用户信息
+                NSLog(@"Wechat name: %@", resultInfo.name);
+                NSLog(@"Wechat iconurl: %@", resultInfo.iconurl);
+                NSLog(@"Wechat gender: %@", resultInfo.unionGender);
+            }
+        }];
+        
+    });
+}
+
+-(void)bindOpenId:(NSString*)openid {
+    NSString *userId = USERID;
+    if (userId != nil && userId.length > 0) {
+        [HttpTool noHeardsPost:API_POST_bindWeChat dic:@{@"openid":openid, @"userid": userId} success:^(id  _Nonnull responce) {
             if ([responce[@"code"] intValue]==200) {
-                [self showToastInView:self.view message:responce[@"message"] duration:0.8];
-                [self.navigationController popViewControllerAnimated:YES];
-            }else{
-               [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+                [self requestInfo];
+            }else {
+                [self.view makeToast: responce[@"message"] duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+    //                [self showHomeViewController];
+                }];
             }
         } faile:^(NSError * _Nonnull erroe) {
             [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
         }];
+    }else {
+        [self showToastInView:self.view message:@"登录信息异常\n请重新登录" duration:0.8];
     }
+}
+
+-(void)requestInfo {
+    [HttpTool post:API_POST_withdraw dic:@{@"type":self.type,@"price":self.moneyField.text} success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue]==200) {
+            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+           [self showToastInView:self.view message:responce[@"message"] duration:0.8];
+
+        }
+    } faile:^(NSError * _Nonnull erroe) {
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
+    }];
 }
 
 //绑定支付宝

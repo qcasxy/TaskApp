@@ -225,14 +225,14 @@
     }
     
     if (model.brokerage != nil) {
-        NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"收入 %@",model.brokerage]];
-        [attriStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 2)];
+        NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"提现成功 %@",model.brokerage]];
+        [attriStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 4)];
         self.moneyLable.attributedText = attriStr;
     }
     
     if (model.price != nil) {
-        NSMutableAttributedString *attriStr1 = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"提现 %@",model.price]];
-        [attriStr1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 2)];
+        NSMutableAttributedString *attriStr1 = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"可提现 %@",model.price]];
+        [attriStr1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 4)];
         self.moneyLable1.attributedText = attriStr1;
     }
 }

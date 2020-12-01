@@ -19,6 +19,7 @@
 #define API_POST_codeLogin API_POST(@"/ht/faburenwu/index.php/api/phonelogin")//手机号验证码登录
 #define API_POST_sendSMS API_POST(@"/ht/faburenwu/index.php/api/sendsms")//发送验证码
 #define API_POST_getDesc API_POST(@"/ht/faburenwu/index.php/api/getdesc")//获取登录页说明文字
+#define API_POST_bindWeChat API_POST(@"/index.php/api/binding")   //绑定微信
 
 #define API_POST_login API_POST(@"/ht/faburenwu/index.php/api/login")//微信是否授权过
 #define API_POST_register API_POST(@"/ht/faburenwu/index.php/api/register")//微信授权注册

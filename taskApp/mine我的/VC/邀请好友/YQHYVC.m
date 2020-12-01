@@ -85,8 +85,6 @@
         }];
     }];
     
-    
-   
     self.maImg =[[UIImageView alloc]init];
     [self.maImg sd_setImageWithURL:[NSURL URLWithString:self.share] placeholderImage:nil];
     [bachImg addSubview:self.maImg];
@@ -117,7 +115,7 @@
         make.width.mas_equalTo(width(170));
     }];
     
-    self.numLable =[HttpTool createLable:BassColor(51, 51, 51) font:VFont textAlignmen:NSTextAlignmentCenter text:[NSString stringWithFormat:@"推荐码%@",self.invite]];
+    self.numLable = [HttpTool createLable:BassColor(51, 51, 51) font:VFont textAlignmen:NSTextAlignmentCenter text:[NSString stringWithFormat:@"推荐码%@",self.invite]];
     [bachImg addSubview:self.numLable];
     [self.numLable mas_makeConstraints:^(MASConstraintMaker *make) {
       make.bottom.mas_equalTo(sLable.mas_top).offset(-height(10));
@@ -125,6 +123,20 @@
         make.height.mas_equalTo(height(15.5));
         make.width.mas_equalTo(width(170));
     }];
+    
+    if (OPENID == nil || OPENID.length <= 0) {
+        NSLog(@"%@", OPENID);
+        UILabel *flagLab = [[UILabel alloc] init];
+        flagLab.text = @"您没有绑定微信，无法分享";
+        flagLab.textAlignment = NSTextAlignmentCenter;
+        flagLab.backgroundColor = [UIColor whiteColor];
+        [bachImg addSubview:flagLab];
+        [flagLab mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.left.equalTo(leftBtn);
+            make.right.equalTo(rightBtn);
+            make.top.equalTo(sLable);
+        }];
+    }
 }
 -(void)clickBtn{
     [self.navigationController popViewControllerAnimated:YES];
@@ -133,7 +145,6 @@
     UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"保存图片" message:nil preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        
         NSLog(@"取消保存图片");
     }];
     
@@ -151,18 +162,8 @@
     
     [self presentViewController:alertControl animated:YES completion:nil];
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-- (void)imageSavedToPhotosAlbum:(UIImage*)image didFinishSavingWithError:  (NSError*)error contextInfo:(id)contextInfo
-
-{
+- (void)imageSavedToPhotosAlbum:(UIImage*)image didFinishSavingWithError:  (NSError*)error contextInfo:(id)contextInfo {
     
     NSString *message;
     
@@ -180,9 +181,7 @@
         
         [self presentViewController:alertControl animated:YES completion:nil];
         
-    }else
-        
-    {
+    }else {
         
         message = [error description];
         

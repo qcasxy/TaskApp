@@ -99,12 +99,7 @@
                 [sureBtn setTitle:@"领取任务" forState:0];
                 [self load_lingQu_drawTask];
             }else if ([self.dataDic[@"draw"] intValue] == 1 && self.taskModel != nil) {
-                UploadScreenshotsVC * VC = [[UploadScreenshotsVC alloc] initModel:self.taskModel];
-                VC.hidesBottomBarWhenPushed=YES;
-                VC.nameStr = self.dataDic[@"title"];
-                VC.orderid = self.dataDic[@"id"];
-                VC.indx=self.homeIndex;;
-                [self.navigationController pushViewController:VC animated:YES];
+                [self uploadScreenshots];
             }else if ([self.dataDic[@"draw"] intValue]==2) {
                 [self showToastInView:self.view message:@"正在审核" duration:0.8];
                 return ;
@@ -112,12 +107,7 @@
                 [self showToastInView:self.view message:@"已完成" duration:0.8];
                 return ;
             }else{
-//                UploadScreenshotsVC * VC =[[UploadScreenshotsVC alloc]init];
-//                VC.hidesBottomBarWhenPushed=YES;
-//                VC.nameStr = self.dataDic[@"title"];
-//                VC.orderid = self.dataDic[@"id"];
-//                VC.indx=self.homeIndex;;
-//                [self.navigationController pushViewController:VC animated:YES];
+                [self uploadScreenshots];
             }
         }
     }];
@@ -163,13 +153,22 @@
     }
 }
 
+-(void)uploadScreenshots {
+    UploadScreenshotsVC * VC = [[UploadScreenshotsVC alloc] initModel:self.taskModel];
+    VC.hidesBottomBarWhenPushed=YES;
+    VC.nameStr = self.dataDic[@"title"];
+    VC.orderid = self.dataDic[@"id"];
+    VC.indx=self.homeIndex;;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+
 //领取任务
 -(void)load_lingQu_drawTask{
     [HttpTool get:API_POST_drawTask dic:@{@"id":[NSString stringWithFormat:@"%@",self.dataDic[@"id"]]} success:^(id  _Nonnull responce) {
-        if ([responce[@"code"] intValue]==200) {
+        if ([responce[@"code"] intValue] == 200) {
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.navigationController popViewControllerAnimated:YES];
+                [self uploadScreenshots];
             });
         }else{
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];

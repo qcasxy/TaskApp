@@ -16,6 +16,7 @@
 #import "WebXieViewController.h"
 #import "VerifyButtonUtils.h"
 #import "PasswordViewController.h"
+#import "UIView+Toast.h"
 
 @interface LoginViewController ()
 
@@ -36,8 +37,6 @@
 @end
 
 @implementation LoginViewController
-
-
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -186,7 +185,7 @@
                 WebXieViewController * webVC =[[WebXieViewController alloc]init];
                 webVC.name = @"用户协议";
                 webVC.context = responce[@"data"][@"deal"];
-                webVC.hidesBottomBarWhenPushed =YES;
+                webVC.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:webVC animated:YES];
             }else {
                 [self showToastInView:self.view message:responce[@"message"] duration:0.8];
@@ -240,6 +239,7 @@
     }];
     
     self.wechatLoginBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+    //    [self.wechatLoginBtn setHidden:YES];
 //    self.wechatLoginBtn.layer.borderWidth = 2.0;
 //    self.wechatLoginBtn.layer.borderColor = BassColor(56, 208, 47).CGColor;
     self.wechatLoginBtn.layer.masksToBounds = true;
@@ -391,7 +391,20 @@
         if ([responce[@"code"] intValue] == 200) {
             [self saveLoginInfo:responce];
 
-            [self showHomeViewController];
+            NSString *tempOpenId = responce[@"data"][@"openid"];
+            if (tempOpenId.length > 0) {
+                [self saveOpenId:tempOpenId];
+                [self showHomeViewController];
+            }else {
+                UIAlertController *alt = [UIAlertController alertControllerWithTitle:@"提示" message:@"您尚未绑定微信" preferredStyle: UIAlertControllerStyleAlert];
+                [alt addAction: [UIAlertAction actionWithTitle:@"稍后再说" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [self showHomeViewController];
+                }]];
+                [alt addAction: [UIAlertAction actionWithTitle:@"立即绑定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self getWechatOpenId];
+                }]];
+                [self.navigationController presentViewController:alt animated:YES completion:nil];
+            }
         }else{
               [self showToastInView:self.view message:responce[@"message"] duration:0.8];
         }
@@ -430,6 +443,35 @@
     });
 }
 
+- (void)getWechatOpenId {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UMSocialManager defaultManager] getUserInfoWithPlatform:UMSocialPlatformType_WechatSession currentViewController:nil completion:^(id result, NSError *error) {
+            if (error) {
+                [self.view makeToast: @"获取微信认证信息失败\n请下次再试～" duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+                    [self showHomeViewController];
+                }];
+            } else {
+                self.resp = result;
+                [self bindOpenId:self.resp.openid];
+                
+                // 授权信息
+                NSLog(@"Wechat uid: %@", self.resp.uid);
+                NSLog(@"Wechat openid: %@", self.resp.openid);
+                NSLog(@"Wechat unionid: %@", self.resp.unionId);
+                NSLog(@"Wechat accessToken: %@", self.resp.accessToken);
+                NSLog(@"Wechat refreshToken: %@", self.resp.refreshToken);
+                NSLog(@"Wechat expiration: %@", self.resp.expiration);
+                
+                // 用户信息
+                NSLog(@"Wechat name: %@", self.resp.name);
+                NSLog(@"Wechat iconurl: %@", self.resp.iconurl);
+                NSLog(@"Wechat gender: %@", self.resp.unionGender);
+            }
+        }];
+        
+    });
+}
+
 //判断微信是否授权过
 -(void)load_login:(NSString*)openid{
      NSLog(@"==========: %@", self.resp.openid);
@@ -438,7 +480,7 @@
             [self saveLoginInfo:responce];
             
             [self showHomeViewController];
-        }else if ([responce[@"code"] intValue]==201){
+        }else if ([responce[@"code"] intValue]==201) {
             BindPhoneVC * VC =[[BindPhoneVC alloc]init];
             VC.hidesBottomBarWhenPushed=YES;
             VC.resp =self.resp;
@@ -451,18 +493,42 @@
     }];
 }
 
+-(void)bindOpenId:(NSString*)openid {
+    NSLog(@"==========: %@", self.resp.openid);
+    NSString *userId = USERID;
+    [HttpTool noHeardsPost:API_POST_bindWeChat dic:@{@"openid":openid, @"userid": userId} success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue]==200) {
+            [self showToastInView:self.view message:@"绑定成功！" duration:0.8];
+            [self showHomeViewController];
+        }else {
+            [self.view makeToast: responce[@"message"] duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
+//                [self showHomeViewController];
+            }];
+        }
+    } faile:^(NSError * _Nonnull erroe) {
+        [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
+    }];
+}
+
 -(void)saveLoginInfo:(NSDictionary *)responce {
     [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"token"] forKey:@"token"];
     [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"userid"] forKey:@"userid"];
     [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"isLogin"];
-    [[NSUserDefaults standardUserDefaults] setObject:self.resp.openid forKey:@"openid"];
+    [self saveOpenId: responce[@"data"][@"openid"]];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+-(void)saveOpenId:(NSString *) openid {
+    [[NSUserDefaults standardUserDefaults] setObject:openid forKey:@"openid"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)showHomeViewController {
-    UIWindow * window =[UIApplication sharedApplication].delegate.window;
-    BassBarViewController * barVC =[[BassBarViewController alloc]init];
-    window.rootViewController=barVC;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIWindow * window =[UIApplication sharedApplication].delegate.window;
+        BassBarViewController * barVC =[[BassBarViewController alloc]init];
+        window.rootViewController=barVC;
+    });
 }
 
 @end

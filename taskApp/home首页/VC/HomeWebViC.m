@@ -56,6 +56,9 @@
         [_webView loadHTMLString:_context baseURL:[NSURL URLWithString:API_URL]];
     }
     [self.view addSubview:_webView];
+    [_webView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
     
     if (@available(iOS 11.0, *)) {
         
