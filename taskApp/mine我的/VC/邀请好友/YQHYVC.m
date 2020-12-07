@@ -127,7 +127,8 @@
     if (OPENID == nil || OPENID.length <= 0) {
         NSLog(@"%@", OPENID);
         UILabel *flagLab = [[UILabel alloc] init];
-        flagLab.text = @"您没有绑定微信，无法分享";
+        flagLab.numberOfLines = 0;
+        flagLab.text = @"您还没有关联微信，暂时无法分享，请通过微信登陆方式关联登陆手机号";
         flagLab.textAlignment = NSTextAlignmentCenter;
         flagLab.backgroundColor = [UIColor whiteColor];
         [bachImg addSubview:flagLab];

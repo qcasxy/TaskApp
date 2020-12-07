@@ -478,6 +478,7 @@
     [HttpTool noHeardsPost:API_POST_login dic:@{@"openid":openid} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
             [self saveLoginInfo:responce];
+            [self saveOpenId:openid];
             
             [self showHomeViewController];
         }else if ([responce[@"code"] intValue]==201) {
@@ -499,6 +500,7 @@
     [HttpTool noHeardsPost:API_POST_bindWeChat dic:@{@"openid":openid, @"userid": userId} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
             [self showToastInView:self.view message:@"绑定成功！" duration:0.8];
+            [self saveOpenId:openid];
             [self showHomeViewController];
         }else {
             [self.view makeToast: responce[@"message"] duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {

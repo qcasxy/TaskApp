@@ -64,6 +64,8 @@
     [HttpTool get:API_POST_userIndex dic:@{} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
             self.cellModel =[MineModel mj_objectWithKeyValues:responce[@"data"]];
+            [[NSUserDefaults standardUserDefaults] setObject:self.cellModel.openid forKey:@"openid"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         }else{
             [self showToastInView:self.view message:responce[@"msg"] duration:0.8];
         }

@@ -29,7 +29,7 @@
 -(void)goToTiXian{
     [HttpTool NoHeardsGet:API_POST_website dic:@{} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]) {
-            WebXieViewController * webVC =[[WebXieViewController alloc]init];
+            WebXieViewController * webVC = [[WebXieViewController alloc]init];
             webVC.name = @"提现规则";
             webVC.context = responce[@"data"][@"withdraw"];
             webVC.hidesBottomBarWhenPushed =YES;

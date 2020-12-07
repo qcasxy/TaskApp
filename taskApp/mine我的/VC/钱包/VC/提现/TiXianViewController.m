@@ -11,6 +11,7 @@
 #import "UIButton+LXMImagePosition.h"
 #import <UMShare/UMShare.h>
 #import "UIView+Toast.h"
+#import "MineModel.h"
 
 @interface TiXianViewController ()
 @property(nonatomic,strong)UITextField * moneyField;
@@ -282,11 +283,22 @@
             [self requestInfo];
         }
     }else{//微信
-        if (OPENID == nil || OPENID.length <= 0) {
+        [HttpTool get:API_POST_userIndex dic:@{} success:^(id  _Nonnull responce) {
+            if ([responce[@"code"] intValue] == 200) {
+                NSString *tempOpenId = [MineModel mj_objectWithKeyValues:responce[@"data"]].openid;
+                [self saveOpenId: tempOpenId];
+
+                if (!(tempOpenId == nil || tempOpenId.length <= 0)) {
+                    [self requestInfo];
+                    return;
+                }
+            }else{
+                [self showToastInView:self.view message:responce[@"msg"] duration:0.8];
+            }
             [self getWechatOpenId];
-        }else {
-            [self requestInfo];
-        }
+        } faile:^(NSError * _Nonnull erroe) {
+            [self showToastInView:self.view message: @"获取微信绑定信息失败\n请重新登录" duration:0.8];
+        }];
     }
 }
 
@@ -324,6 +336,7 @@
     if (userId != nil && userId.length > 0) {
         [HttpTool noHeardsPost:API_POST_bindWeChat dic:@{@"openid":openid, @"userid": userId} success:^(id  _Nonnull responce) {
             if ([responce[@"code"] intValue]==200) {
+                [self saveOpenId:openid];
                 [self requestInfo];
             }else {
                 [self.view makeToast: responce[@"message"] duration:0.8 position:CSToastPositionCenter title:nil image:nil style:nil completion:^(BOOL didTap) {
@@ -339,13 +352,12 @@
 }
 
 -(void)requestInfo {
-    [HttpTool post:API_POST_withdraw dic:@{@"type":self.type,@"price":self.moneyField.text} success:^(id  _Nonnull responce) {
-        if ([responce[@"code"] intValue]==200) {
+    [HttpTool post:API_POST_withdraw dic:@{@"type":self.type, @"price":self.moneyField.text} success:^(id  _Nonnull responce) {
+        if ([responce[@"code"] intValue] == 200) {
             [self showToastInView:self.view message:responce[@"message"] duration:0.8];
             [self.navigationController popViewControllerAnimated:YES];
         }else{
            [self showToastInView:self.view message:responce[@"message"] duration:0.8];
-
         }
     } faile:^(NSError * _Nonnull erroe) {
         [self showToastInView:self.view message: @"连接超时，请检查您的网络！" duration:0.8];
@@ -401,4 +413,10 @@
     [alert addAction:cancel];
     [self presentViewController:alert animated:YES completion:nil];
 }
+
+-(void)saveOpenId:(NSString *) openid {
+    [[NSUserDefaults standardUserDefaults] setObject:openid forKey:@"openid"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 @end

@@ -26,7 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy)NSString * content;
 @property(nonatomic,copy)NSString * levelname;
 @property(nonatomic,copy)NSString * share;
-@property(nonatomic,copy)NSString *poster;
+@property(nonatomic,copy)NSString * poster;
+@property(nonatomic,copy)NSString * withdraw;   //  提现成功总合金额 2020-12-07新增字段
+@property(nonatomic,copy)NSString * openid;
 @end
 
 NS_ASSUME_NONNULL_END

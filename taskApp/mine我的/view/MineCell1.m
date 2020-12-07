@@ -225,7 +225,7 @@
     }
     
     if (model.brokerage != nil) {
-        NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"提现成功 %@",model.brokerage]];
+        NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"提现成功 %@",model.withdraw]];
         [attriStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, 4)];
         self.moneyLable.attributedText = attriStr;
     }
