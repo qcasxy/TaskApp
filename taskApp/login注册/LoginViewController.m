@@ -105,13 +105,13 @@
         make.top.mas_equalTo(self.phoneField.mas_bottom).offset(height(20));
     }];
     
-    self.inviteField = [HttpTool createField:@"请输入邀请码（非必填）" font:[UIFont systemFontOfSize:height(15)] color:BassColor(51,51,51) ishidden: YES];
+    self.inviteField = [HttpTool createField:@"请输入邀请码（选填）" font:[UIFont systemFontOfSize:height(15)] color:BassColor(51,51,51) ishidden: YES];
     [self.inviteField setAlpha: 0.0];
     self.inviteField.layer.borderColor = [BassColor(233, 233, 233) CGColor];
     self.inviteField.layer.borderWidth = 1.0;
     self.inviteField.layer.cornerRadius = 4.0;
     self.inviteField.keyboardType = UIKeyboardTypePhonePad;
-    self.inviteField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"非邀请用户请输入20001" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
+    self.inviteField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入邀请码（选填）" attributes: @{NSForegroundColorAttributeName : BassColor(233, 233, 233)}];
     self.inviteField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, width(10.0), height(44.0))];
     self.inviteField.leftViewMode = UITextFieldViewModeAlways;
     [self.view addSubview:self.inviteField];

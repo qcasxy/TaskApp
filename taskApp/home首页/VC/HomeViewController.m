@@ -55,7 +55,7 @@
 -(void)load_userIndex{
     [HttpTool get:API_POST_userIndex dic:@{} success:^(id  _Nonnull responce) {
         if ([responce[@"code"] intValue]==200) {
-            self.cellModel =[MineModel mj_objectWithKeyValues:responce[@"data"]];
+            self.cellModel = [MineModel mj_objectWithKeyValues:responce[@"data"]];
             NSDictionary  *dic = responce[@"data"];
             if ([[dic allKeys] containsObject:@"account"]) {
                 [[NSUserDefaults standardUserDefaults] setObject:responce[@"data"][@"account"] forKey:@"aliAccount"];

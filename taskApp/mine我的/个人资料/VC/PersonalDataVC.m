@@ -11,10 +11,12 @@
 #import "PersinDataCell0.h"
 #import "RealNameVC.h"
 #import "UIView+Toast.h"
+#import "MineModel.h"
 
 @interface PersonalDataVC ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITableViewDelegate,UITableViewDataSource,PersinDataCell0Delegate>
 @property(nonatomic,strong)UITableView * tableView;
 @property(nonatomic,strong)NSDictionary * dataDic;
+@property(nonatomic, strong) MineModel *userModel;
 @property(nonatomic,strong)UIImageView * touImg;
 @property(nonatomic,strong)UIImage *img;
 @property(nonatomic,copy)NSString * nickStr;
@@ -105,8 +107,13 @@
         [self stopDGActView];
         if ([responce[@"code"] intValue]==200) {
             self.dataDic = responce[@"data"];
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:responce[@"data"][@"headimg"]]];
-            self.img=[UIImage imageWithData:data];
+            self.userModel = [MineModel mj_objectWithKeyValues:responce[@"data"]];
+            if (self.userModel.headimg) {
+                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:self.userModel.headimg]];
+                self.img=[UIImage imageWithData:data];
+            }else {
+                self.img = nil;
+            }
             [self.tableView reloadData];
         }else {
             [self.view hideAllToasts];

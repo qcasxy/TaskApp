@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MineModel : NSObject
+@property(nonatomic,copy)NSString * account;
 @property(nonatomic,copy)NSString * mineID;
 @property(nonatomic,copy)NSString * name;
 @property(nonatomic,copy)NSString * img;
